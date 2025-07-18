@@ -372,3 +372,12 @@ function confetti() {
     ctx.clearRect(0, 0, W, H);
   }, 5000);
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const intro = document.getElementById("intro");
+  setTimeout(() => {
+    intro.style.opacity = "0";
+    setTimeout(() => {
+      intro.style.display = "none";
+    }, 1500);
+  }, 4000);
+});
