@@ -22,7 +22,6 @@ const masterVolumeControl = document.getElementById("master-volume");
 const musicVolumeControl = document.getElementById("music-volume");
 
 window.onload = () => {
-  // Welcome fadeout then show auth
   setTimeout(() => {
     const welcome = document.getElementById('welcome-screen');
     welcome.classList.add('fadeout');
@@ -33,26 +32,21 @@ window.onload = () => {
     }, 1000);
   }, 2500);
 
-  // Set audio volumes on load
   setVolumes();
   masterVolumeControl?.addEventListener('input', setVolumes);
   musicVolumeControl?.addEventListener('input', setVolumes);
 
   bgMusic.play().catch(() => {});
 
-  // Eye toggles
   document.getElementById('login-eye').onclick = () => togglePassword('login-password');
   document.getElementById('register-eye').onclick = () => togglePassword('register-password');
 
-  // Switch login/register screens
   document.getElementById('to-register').onclick = () => switchAuthScreens('register');
   document.getElementById('to-login').onclick = () => switchAuthScreens('login');
 
-  // Auth buttons
   document.getElementById('register-btn').onclick = register;
   document.getElementById('login-btn').onclick = login;
 
-  // Main menu buttons
   document.getElementById('btn-duel').onclick = () => {
     hideAllScreens();
     document.getElementById('duel-screen').style.display = 'block';
@@ -67,7 +61,6 @@ window.onload = () => {
   };
   document.getElementById('btn-logout').onclick = logout;
 
-  // Back buttons
   document.querySelectorAll('.btn-back').forEach(btn => {
     btn.onclick = () => {
       hideAllScreens();
@@ -75,13 +68,12 @@ window.onload = () => {
     };
   });
 
-  // Duel mode
   document.getElementById('start-duel-btn').onclick = startDuel;
 
-  // Party mode buttons
   document.getElementById('create-party-btn').onclick = createParty;
   document.getElementById('join-party-btn').onclick = joinParty;
   document.getElementById('party-end-turn').onclick = endPartyTurn;
+  document.getElementById('party-leave-btn').onclick = leaveParty;
 };
 
 function setVolumes() {
@@ -109,6 +101,7 @@ function showAuthScreen() {
   document.getElementById('auth-container').style.display = 'block';
   switchAuthScreens('login');
   document.getElementById('menu-screen').style.display = 'none';
+  hidePartyControls();
 }
 
 function register() {
@@ -148,6 +141,20 @@ function hideAllScreens() {
     const el = document.getElementById(id);
     if(el) el.style.display = 'none';
   });
+  hidePartyControls();
+}
+
+function hidePartyControls() {
+  document.getElementById('party-end-turn').style.display = 'none';
+  document.getElementById('party-leave-btn').style.display = 'none';
+  document.getElementById('party-info').textContent = '';
+  document.getElementById('party-game-board').innerHTML = '';
+  document.getElementById('party-game-message').textContent = '';
+  partyPlayersData = [];
+  playerErrors = [];
+  partyCode = null;
+  currentTurn = 0;
+  clearTimeout(partyTurnTimer);
 }
 
 // Duel mode logic
@@ -156,7 +163,6 @@ function startDuel() {
   const emojis = emojiSets[diff];
   if(!emojis) return alert("Invalid difficulty");
 
-  // Reset duel variables
   duelCards = shuffle([...emojis, ...emojis]);
   duelFirstCard = null;
   duelSecondCard = null;
@@ -167,18 +173,16 @@ function startDuel() {
   board.innerHTML = '';
   document.getElementById('duel-game-message').textContent = 'Memorize cards...';
 
-  // Create cards but hide emojis at first
   duelCards.forEach((emoji, index) => {
     const card = document.createElement('div');
     card.className = 'card';
     card.dataset.emoji = emoji;
     card.dataset.index = index;
-    card.textContent = ''; // Hidden initially
+    card.textContent = '';
     card.onclick = () => flipCard(card);
     board.appendChild(card);
   });
 
-  // Show all cards face up for 1.2 seconds, then hide and start game
   Array.from(board.children).forEach(card => {
     card.textContent = card.dataset.emoji;
     card.classList.add('flip');
@@ -228,8 +232,10 @@ function flipCard(card) {
 }
 
 // Party mode logic
-
 let partyTurnTimer = null;
+let partyFirstCard = null;
+let partySecondCard = null;
+let partyLockBoard = false;
 
 function createParty() {
   partyPlayersData = [{name: currentUser, errors: 0}];
@@ -240,6 +246,7 @@ function createParty() {
   document.getElementById('party-game-board').innerHTML = '';
   document.getElementById('party-game-message').textContent = '';
   document.getElementById('party-end-turn').style.display = 'none';
+  document.getElementById('party-leave-btn').style.display = 'inline-block';
 }
 
 function joinParty() {
@@ -256,6 +263,7 @@ function joinParty() {
   playerErrors = partyPlayersData.map(p => 0);
   document.getElementById('party-info').textContent = `Joined party: ${partyCode}. Players: ${partyPlayersData.map(p=>p.name).join(', ')}`;
   startPartyGame();
+  document.getElementById('party-leave-btn').style.display = 'inline-block';
 }
 
 function startPartyGame() {
@@ -270,7 +278,6 @@ function startPartyGame() {
 }
 
 function renderPartyCards() {
-  // Simple 6 pairs emoji set
   const emojis = emojiSets.medium;
   let cards = shuffle([...emojis, ...emojis]);
   const board = document.getElementById('party-game-board');
@@ -290,10 +297,6 @@ function renderPartyCards() {
   partyLockBoard = false;
 }
 
-let partyFirstCard = null;
-let partySecondCard = null;
-let partyLockBoard = false;
-
 function partyFlipCard(card) {
   if(partyLockBoard) return;
   if(card.classList.contains('flip')) return;
@@ -308,7 +311,6 @@ function partyFlipCard(card) {
     partyLockBoard = true;
 
     if(partyFirstCard.dataset.emoji === partySecondCard.dataset.emoji) {
-      // Matched
       partyFirstCard = null;
       partySecondCard = null;
       partyLockBoard = false;
@@ -337,33 +339,79 @@ function startTurnTimer() {
   partyTurnTimer = setTimeout(() => {
     playerErrors[currentTurn]++;
     updatePartyMessage(`Time up! Player ${partyPlayersData[currentTurn].name} gets +1 error. Total errors: ${playerErrors[currentTurn]}`);
-    nextTurn();
-  }, 5000);
+    endPartyTurn();
+  }, 10000); // 10 seconds to play turn
 }
 
 function endPartyTurn() {
   clearTimeout(partyTurnTimer);
-  nextTurn();
-}
 
-function nextTurn() {
-  currentTurn = (currentTurn + 1) % partyPlayersData.length;
-  updatePartyMessage(`Player ${partyPlayersData[currentTurn].name}'s turn! Make a move within 5 seconds.`);
+  if (partyFirstCard && partySecondCard) {
+    // if cards flipped and match not resolved, reset them
+    partyFirstCard.classList.remove('flip');
+    partyFirstCard.textContent = '';
+    partySecondCard.classList.remove('flip');
+    partySecondCard.textContent = '';
+  }
+  partyFirstCard = null;
+  partySecondCard = null;
+  partyLockBoard = false;
+
+  currentTurn++;
+  if(currentTurn >= partyPlayersData.length) currentTurn = 0;
+
+  document.getElementById('party-game-message').textContent = `Player ${partyPlayersData[currentTurn].name}'s turn!`;
+
   startTurnTimer();
 }
 
-function generatePartyCode() {
-  return Math.random().toString(36).substring(2, 7).toUpperCase();
+function leaveParty() {
+  if(!partyPlayersData || partyPlayersData.length === 0) return;
+
+  const leavingIndex = partyPlayersData.findIndex(p => p.name === currentUser);
+  if(leavingIndex === -1) return;
+
+  // Remove player
+  partyPlayersData.splice(leavingIndex, 1);
+  playerErrors.splice(leavingIndex, 1);
+
+  if(partyPlayersData.length === 0) {
+    // No players left - reset party state and UI
+    partyCode = null;
+    currentTurn = 0;
+    document.getElementById('party-info').textContent = 'Party ended.';
+    document.getElementById('party-game-board').innerHTML = '';
+    document.getElementById('party-game-message').textContent = '';
+    document.getElementById('party-end-turn').style.display = 'none';
+    document.getElementById('party-leave-btn').style.display = 'none';
+  } else {
+    // Adjust current turn if needed
+    if(currentTurn >= partyPlayersData.length) currentTurn = 0;
+
+    document.getElementById('party-info').textContent = `Players: ${partyPlayersData.map(p => p.name).join(', ')}`;
+    document.getElementById('party-game-message').textContent = `Player ${partyPlayersData[currentTurn].name}'s turn!`;
+    renderPartyCards();
+    startTurnTimer();
+  }
 }
- 
-// Fisher-Yates shuffle
+
+// Utility: shuffle array
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
-
-  while(currentIndex !== 0) {
+  while(currentIndex !== 0){
     randomIndex = Math.floor(Math.random() * currentIndex);
     currentIndex--;
     [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
   }
   return array;
+}
+
+// Utility: generate random 5 letter uppercase party code
+function generatePartyCode(){
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let code = '';
+  for(let i=0; i<5; i++){
+    code += chars.charAt(Math.floor(Math.random()*chars.length));
+  }
+  return code;
 }
