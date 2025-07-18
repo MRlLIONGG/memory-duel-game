@@ -1,56 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adam Memory Game</title>
-  <link rel="stylesheet" href="style.css"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adam Memory Game</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Intro screen -->
-  <div id="intro-screen" class="screen">
-    <h1>Welcome to Adam first game</h1>
+  <!-- Intro Screen -->
+  <div id="welcome-screen">Welcome to Adam first game</div>
+
+  <!-- Main container -->
+  <div id="main-container" style="display:none;">
+
+    <!-- Auth Container -->
+    <div id="auth-container">
+      <div id="login-screen" class="auth-screen">
+        <h2>Login</h2>
+        <div class="password-container">
+          <input id="login-username" placeholder="Username" autocomplete="off" />
+          <div class="password-wrapper">
+            <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
+            <span id="login-eye" class="eye">👁️</span>
+          </div>
+        </div>
+        <button id="login-btn">Login</button>
+        <p class="link-text" id="to-register">No account? Register here</p>
+      </div>
+
+      <div id="register-screen" class="auth-screen" style="display:none;">
+        <h2>Register</h2>
+        <div class="password-container">
+          <input id="register-username" placeholder="Username" autocomplete="off" />
+          <div class="password-wrapper">
+            <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+            <span id="register-eye" class="eye">👁️</span>
+          </div>
+        </div>
+        <button id="register-btn">Register</button>
+        <p class="link-text" id="to-login">Already have an account? Login here</p>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    <div id="menu-screen" style="display:none;">
+      <h1>Adam Memory Game</h1>
+      <button id="btn-duel">Duel Mode</button>
+      <button id="btn-party">Party Mode</button>
+      <button id="btn-settings">Settings</button>
+      <button id="btn-logout">Logout</button>
+    </div>
+
+    <!-- Duel Mode -->
+    <div id="duel-screen" style="display:none;">
+      <h2>Duel Mode</h2>
+      <label for="duel-level">Choose Difficulty:</label>
+      <select id="duel-level">
+        <option value="easy">Easy (4 pairs)</option>
+        <option value="medium">Medium (6 pairs)</option>
+        <option value="hard">Hard (8 pairs)</option>
+        <option value="extreme">Extreme (10 pairs)</option>
+        <option value="impossible">Impossible (12 pairs)</option>
+      </select>
+      <button id="start-duel-btn">Start Duel</button>
+      <button class="btn-back">Back</button>
+
+      <div id="duel-game-board"></div>
+      <div id="duel-game-message"></div>
+    </div>
+
+    <!-- Party Mode -->
+    <div id="party-screen" style="display:none;">
+      <h2>Party Mode</h2>
+      <label for="party-difficulty">Choose Difficulty:</label>
+      <select id="party-difficulty">
+        <option value="easy">Easy (4 pairs)</option>
+        <option value="medium">Medium (6 pairs)</option>
+        <option value="hard">Hard (8 pairs)</option>
+        <option value="extreme">Extreme (10 pairs)</option>
+        <option value="impossible">Impossible (12 pairs)</option>
+      </select>
+
+      <button id="create-party-btn">Create Party</button>
+      <input id="join-code-input" placeholder="Enter party code to join" autocomplete="off" />
+      <button id="join-party-btn">Join Party</button>
+      <button class="btn-back">Back</button>
+
+      <div id="party-info" style="margin-top:15px;"></div>
+      <div id="party-game-board"></div>
+      <div id="party-message"></div>
+      <button id="party-end-turn" style="display:none;">End Turn</button>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings-screen" style="display:none;">
+      <h2>Settings</h2>
+      <label for="master-volume">Master Volume:</label>
+      <input type="range" id="master-volume" min="0" max="1" step="0.01" value="0.5" />
+      <br /><br />
+      <label for="music-volume">Music Volume:</label>
+      <input type="range" id="music-volume" min="0" max="1" step="0.01" value="0.5" />
+      <br /><br />
+      <button class="btn-back">Back</button>
+    </div>
+
   </div>
 
-  <!-- Main Menu -->
-  <div id="main-menu" class="screen hidden">
-    <h1>Adam Memory Game</h1>
-    <button onclick="showLogin()">Login</button>
-    <button onclick="showRegister()">Register</button>
-    <button onclick="showSettings()">Settings</button>
-  </div>
-
-  <!-- Login Form -->
-  <div id="login-screen" class="screen hidden">
-    <h2>Login</h2>
-    <input type="text" placeholder="Username" id="login-user" />
-    <input type="password" placeholder="Password" id="login-pass" />
-    <button onclick="toggleEye('login-pass')">👁️</button>
-    <button onclick="login()">Login</button>
-    <button onclick="backToMenu()">Back</button>
-  </div>
-
-  <!-- Register Form -->
-  <div id="register-screen" class="screen hidden">
-    <h2>Register</h2>
-    <input type="text" placeholder="Username" id="register-user" />
-    <input type="password" placeholder="Password" id="register-pass" />
-    <button onclick="toggleEye('register-pass')">👁️</button>
-    <button onclick="register()">Register</button>
-    <button onclick="backToMenu()">Back</button>
-  </div>
-
-  <!-- Settings -->
-  <div id="settings-screen" class="screen hidden">
-    <h2>Settings</h2>
-    <label>Master Volume: <input type="range" id="master-volume" min="0" max="1" step="0.01" /></label>
-    <label>Music Volume: <input type="range" id="music-volume" min="0" max="1" step="0.01" /></label>
-    <button onclick="backToMenu()">Back</button>
-  </div>
-
-  <audio id="bg-music" loop src="sounds/music.mp3"></audio>
-  <audio id="click-sound" src="sounds/click.mp3"></audio>
+  <audio id="background-music" src="sounds/background.mp3" loop></audio>
 
   <script src="script.js"></script>
 </body>
