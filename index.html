@@ -1,49 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Adam Memory Game</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Adam Memory Game</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Intro Screen -->
+  <!-- Welcome Screen -->
   <div id="welcome-screen">Welcome to Adam first game</div>
 
-  <!-- Main container -->
+  <!-- Main Container -->
   <div id="main-container" style="display:none;">
 
-    <!-- Auth Container -->
+    <!-- AUTH CONTAINER -->
     <div id="auth-container">
-      <div id="login-screen" class="auth-screen">
+      <div id="login-screen">
         <h2>Login</h2>
         <div class="password-container">
           <input id="login-username" placeholder="Username" autocomplete="off" />
-          <div class="password-wrapper">
-            <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
-            <span id="login-eye" class="eye">👁️</span>
-          </div>
+        </div>
+        <div class="password-container">
+          <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
+          <span id="login-eye" class="eye">👁️</span>
         </div>
         <button id="login-btn">Login</button>
         <p class="link-text" id="to-register">No account? Register here</p>
       </div>
 
-      <div id="register-screen" class="auth-screen" style="display:none;">
+      <div id="register-screen" style="display:none;">
         <h2>Register</h2>
+        <input id="register-username" placeholder="Username" autocomplete="off" />
         <div class="password-container">
-          <input id="register-username" placeholder="Username" autocomplete="off" />
-          <div class="password-wrapper">
-            <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
-            <span id="register-eye" class="eye">👁️</span>
-          </div>
+          <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+          <span id="register-eye" class="eye">👁️</span>
         </div>
         <button id="register-btn">Register</button>
         <p class="link-text" id="to-login">Already have an account? Login here</p>
       </div>
     </div>
 
-    <!-- Menu -->
+    <!-- MENU SCREEN -->
     <div id="menu-screen" style="display:none;">
       <h1>Adam Memory Game</h1>
       <button id="btn-duel">Duel Mode</button>
@@ -52,11 +50,11 @@
       <button id="btn-logout">Logout</button>
     </div>
 
-    <!-- Duel Mode -->
+    <!-- DUEL SCREEN -->
     <div id="duel-screen" style="display:none;">
       <h2>Duel Mode</h2>
-      <label for="duel-level">Choose Difficulty:</label>
-      <select id="duel-level">
+      <label for="duel-difficulty">Choose difficulty:</label>
+      <select id="duel-difficulty">
         <option value="easy">Easy (4 pairs)</option>
         <option value="medium">Medium (6 pairs)</option>
         <option value="hard">Hard (8 pairs)</option>
@@ -64,49 +62,39 @@
         <option value="impossible">Impossible (12 pairs)</option>
       </select>
       <button id="start-duel-btn">Start Duel</button>
-      <button class="btn-back">Back</button>
+      <button class="btn-back">Back to Menu</button>
 
       <div id="duel-game-board"></div>
       <div id="duel-game-message"></div>
     </div>
 
-    <!-- Party Mode -->
+    <!-- PARTY SCREEN -->
     <div id="party-screen" style="display:none;">
       <h2>Party Mode</h2>
-      <label for="party-difficulty">Choose Difficulty:</label>
-      <select id="party-difficulty">
-        <option value="easy">Easy (4 pairs)</option>
-        <option value="medium">Medium (6 pairs)</option>
-        <option value="hard">Hard (8 pairs)</option>
-        <option value="extreme">Extreme (10 pairs)</option>
-        <option value="impossible">Impossible (12 pairs)</option>
-      </select>
-
       <button id="create-party-btn">Create Party</button>
-      <input id="join-code-input" placeholder="Enter party code to join" autocomplete="off" />
+      <input id="join-party-code" placeholder="Enter Party Code" />
       <button id="join-party-btn">Join Party</button>
-      <button class="btn-back">Back</button>
+      <button class="btn-back">Back to Menu</button>
 
-      <div id="party-info" style="margin-top:15px;"></div>
+      <div id="party-info"></div>
       <div id="party-game-board"></div>
-      <div id="party-message"></div>
+      <div id="party-game-message"></div>
       <button id="party-end-turn" style="display:none;">End Turn</button>
     </div>
 
-    <!-- Settings -->
+    <!-- SETTINGS SCREEN -->
     <div id="settings-screen" style="display:none;">
       <h2>Settings</h2>
       <label for="master-volume">Master Volume:</label>
-      <input type="range" id="master-volume" min="0" max="1" step="0.01" value="0.5" />
-      <br /><br />
+      <input id="master-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
       <label for="music-volume">Music Volume:</label>
-      <input type="range" id="music-volume" min="0" max="1" step="0.01" value="0.5" />
-      <br /><br />
-      <button class="btn-back">Back</button>
+      <input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
+      <button class="btn-back">Back to Menu</button>
     </div>
 
   </div>
 
+  <!-- Background music -->
   <audio id="background-music" src="sounds/background.mp3" loop></audio>
 
   <script src="script.js"></script>
