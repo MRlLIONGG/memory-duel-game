@@ -1,71 +1,49 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f4f4;
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: #fff;
   text-align: center;
-  margin: 0;
-  padding: 20px;
-  transition: background-color 0.5s;
-}
-
-.dark-mode {
-  background-color: #121212;
-  color: white;
+  margin-top: 100px;
+  transition: background 1s ease;
 }
 
 button {
-  margin: 10px;
+  display: block;
+  margin: 10px auto;
   padding: 10px 20px;
-  font-size: 16px;
+  font-size: 18px;
+  background: #00bcd4;
+  border: none;
+  color: white;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #008ba3;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
 }
 
 .hidden {
   display: none;
 }
 
-.centered {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 28px;
-  animation: fadeInOut 2s ease-in-out forwards;
+#intro-screen {
+  font-size: 30px;
+  animation: fadeInOut 2s ease-in-out;
 }
 
 @keyframes fadeInOut {
   0% { opacity: 0; }
-  30% { opacity: 1; }
-  70% { opacity: 1; }
+  25% { opacity: 1; }
+  75% { opacity: 1; }
   100% { opacity: 0; }
-}
-
-.colorful-text {
-  background: linear-gradient(to right, #ff416c, #ff4b2b, #1e90ff, #32cd32);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.eye {
-  cursor: pointer;
-  font-size: 20px;
-  margin-left: 8px;
-}
-
-.card {
-  display: inline-block;
-  font-size: 36px;
-  width: 80px;
-  height: 80px;
-  line-height: 80px;
-  border: 2px solid #888;
-  margin: 8px;
-  background-color: white;
-  vertical-align: middle;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.card.flipped {
-  background-color: #ffd;
-  transform: scale(1.1);
 }
