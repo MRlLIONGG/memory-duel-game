@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adam Memory Game</title>
 <style>
-  /* Background gradient with subtle animation */
+  /* Background gradient animation */
   body {
     margin: 0; padding: 0;
     height: 100vh;
@@ -17,6 +17,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    color: white;
   }
   @keyframes gradientBG {
     0%{background-position:0% 50%;}
@@ -24,19 +25,15 @@
     100%{background-position:0% 50%;}
   }
 
-  /* Welcome screen container */
   #welcome-screen {
     position: absolute;
     top:0; left:0; right:0; bottom:0;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: white;
     font-size: 3.5rem;
     font-weight: 700;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-    animation: fadeInOut 2.5s ease forwards;
-    /* Rainbow text animation */
     background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff, #ff416c);
     background-size: 400% 400%;
     -webkit-background-clip: text;
@@ -55,16 +52,19 @@
     100% {opacity: 0; visibility: hidden;}
   }
 
-  /* Main menu container (hidden by default) */
-  #main-menu {
+  #main-menu, #game-ui {
     display: none;
     flex-direction: column;
     align-items: center;
-    color: white;
     text-align: center;
+    max-width: 480px;
   }
 
-  #main-menu h1 {
+  #main-menu.active, #game-ui.active {
+    display: flex;
+  }
+
+  h1 {
     font-size: 3rem;
     margin-bottom: 20px;
     text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
@@ -86,13 +86,12 @@
     background: #ff1e50;
   }
 
-  /* Login/Register forms */
   #auth-container {
     background: rgba(0,0,0,0.35);
     padding: 25px 35px;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-    max-width: 350px;
+    width: 100%;
   }
   input {
     width: 100%;
@@ -111,6 +110,24 @@
   p.link-text:hover {
     text-decoration: underline;
   }
+
+  /* Dark mode styles */
+  body.dark-mode {
+    background: #121212;
+    color: #eee;
+    animation: none;
+  }
+  body.dark-mode #auth-container {
+    background: rgba(255,255,255,0.1);
+    box-shadow: none;
+  }
+  body.dark-mode button {
+    background: #00d2ff;
+    color: #121212;
+  }
+  body.dark-mode button:hover {
+    background: #0099cc;
+  }
 </style>
 </head>
 <body>
@@ -119,7 +136,7 @@
   <div id="welcome-screen">Welcome to Adam first game</div>
 
   <!-- Main menu with login/register -->
-  <div id="main-menu">
+  <div id="main-menu" class="active">
     <h1>Adam Memory Game</h1>
     <div id="auth-container">
 
@@ -142,16 +159,32 @@
     </div>
   </div>
 
+  <!-- Game UI (hidden until login success) -->
+  <div id="game-ui">
+    <h2>Welcome, <span id="user-display"></span>!</h2>
+    <div>
+      <button id="toggle-darkmode">Toggle Dark Mode</button>
+      <button id="start-duel">Start Duel</button>
+      <button id="start-party">Start Party Mode</button>
+      <button id="logout-btn">Logout</button>
+    </div>
+
+    <div id="game-message" style="margin-top:20px; font-size:1.2rem;"></div>
+
+    <!-- Placeholder for game board -->
+    <div id="game-board" style="margin-top:15px; max-width:400px;"></div>
+  </div>
+
 <script>
-  // After 2.5 seconds, hide welcome and show main menu
+  // Wait 2.5s then hide welcome and show main menu
   window.onload = () => {
     setTimeout(() => {
       document.getElementById('welcome-screen').style.display = 'none';
-      document.getElementById('main-menu').style.display = 'flex';
+      document.getElementById('main-menu').classList.add('active');
     }, 2500);
   };
 
-  // Switch screens
+  // Switch login/register screens
   const toRegister = document.getElementById('to-register');
   const toLogin = document.getElementById('to-login');
   const loginScreen = document.getElementById('login-screen');
@@ -166,18 +199,17 @@
     loginScreen.style.display = 'block';
   };
 
-  // User registration & login logic using localStorage (demo purpose)
+  // User login/register logic (using localStorage)
   const ownerUser = 'Owner';
   const ownerPass = 'ownerpass';
+  let currentUser = null;
 
   document.getElementById('register-btn').onclick = () => {
     let u = document.getElementById('register-username').value.trim();
     let p = document.getElementById('register-password').value.trim();
-
     if (!u || !p) return alert('Please enter username and password.');
     if (u === ownerUser) return alert('Username "Owner" is reserved.');
     if (localStorage.getItem('user_' + u) !== null) return alert('Username already taken.');
-
     localStorage.setItem('user_' + u, p);
     alert('Registered successfully! Please login.');
     toLogin.onclick();
@@ -186,15 +218,40 @@
   document.getElementById('login-btn').onclick = () => {
     let u = document.getElementById('login-username').value.trim();
     let p = document.getElementById('login-password').value.trim();
-
     if (!u || !p) return alert('Please enter username and password.');
-
     if ((u === ownerUser && p === ownerPass) || localStorage.getItem('user_' + u) === p) {
-      alert('Welcome, ' + u + '! Login successful.');
-      // Here you can add code to transition to your actual game screen
+      currentUser = u;
+      // Hide login/register, show game UI
+      document.getElementById('main-menu').classList.remove('active');
+      document.getElementById('game-ui').classList.add('active');
+      document.getElementById('user-display').textContent = currentUser;
+      document.getElementById('game-message').textContent = 'Choose an option to start playing!';
     } else {
       alert('Wrong username or password.');
     }
+  };
+
+  // Logout button - show main menu again
+  document.getElementById('logout-btn').onclick = () => {
+    currentUser = null;
+    document.getElementById('game-ui').classList.remove('active');
+    document.getElementById('main-menu').classList.add('active');
+    // Clear inputs
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+  };
+
+  // Dark mode toggle
+  document.getElementById('toggle-darkmode').onclick = () => {
+    document.body.classList.toggle('dark-mode');
+  };
+
+  // Dummy handlers for duel and party mode buttons
+  document.getElementById('start-duel').onclick = () => {
+    document.getElementById('game-message').textContent = 'Duel mode started! (Game logic not implemented yet)';
+  };
+  document.getElementById('start-party').onclick = () => {
+    document.getElementById('game-message').textContent = 'Party mode started! (Game logic not implemented yet)';
   };
 </script>
 
