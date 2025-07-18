@@ -64,23 +64,25 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: fadeOut 3s ease-out 2s forwards;
+  animation: fadeOut 2.5s ease forwards;
+  /* fadeOut starts immediately and ends at 2.5s */
 }
 
 #intro-text {
   font-size: 2.5em;
-  color: #ff4081;
-  animation: colorCycle 2s infinite;
+  color: white;
+  opacity: 1;
+  animation: fadeText 2.5s ease forwards;
 }
 
-@keyframes colorCycle {
-  0% { color: #ff4081; }
-  25% { color: #f50057; }
-  50% { color: #7c4dff; }
-  75% { color: #448aff; }
-  100% { color: #ff4081; }
+@keyframes fadeText {
+  0% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 @keyframes fadeOut {
-  to { opacity: 0; visibility: hidden; }
+  0% { opacity: 1; visibility: visible; }
+  90% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
 }
