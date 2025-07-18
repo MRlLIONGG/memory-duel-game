@@ -44,12 +44,36 @@ button {
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
-  margin: 10px 0;
+  margin: 10px 5px;
   transition: background-color 0.3s;
 }
 
-button:hover {
+button:hover:enabled {
   background-color: #1c5980;
+}
+
+button:disabled {
+  background-color: #555;
+  cursor: default;
+}
+
+/* Style for clickable paragraphs for switching screens */
+#auth-screen p,
+#register-screen p {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+#auth-screen p:hover,
+#register-screen p:hover {
+  background-color: rgba(255, 255, 255, 0.35);
 }
 
 #game-board {
@@ -59,6 +83,7 @@ button:hover {
   gap: 12px;
   justify-content: center;
   user-select: none;
+  outline: none;
 }
 
 .card {
@@ -77,10 +102,21 @@ button:hover {
   perspective: 600px;
   position: relative;
   user-select: none;
+  transition: transform 0.3s;
+}
+
+.card.revealed {
+  background-color: #1abc9c;
+  cursor: default;
 }
 
 .card.flip {
   animation: flipCard 0.6s forwards;
+}
+
+.card:focus {
+  outline: 3px solid #1abc9c;
+  outline-offset: 3px;
 }
 
 @keyframes flipCard {
@@ -91,7 +127,7 @@ button:hover {
 #game-message {
   margin-top: 15px;
   font-size: 1.2rem;
-  height: 25px;
+  height: 30px;
 }
 
 #admin-panel {
@@ -100,4 +136,46 @@ button:hover {
 
 #level-select {
   margin-bottom: 10px;
+}
+
+.game-controls {
+  margin: 10px 0;
+}
+
+#status-bar {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+#leaderboard {
+  max-width: 400px;
+  margin: 10px auto 40px;
+  padding: 0;
+  text-align: left;
+}
+
+#leaderboard li {
+  background-color: rgba(255, 255, 255, 0.15);
+  margin: 3px 0;
+  padding: 5px 12px;
+  border-radius: 6px;
+  user-select: none;
+}
+
+@media (max-width: 480px) {
+  #game-board {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .card {
+    width: 60px;
+    height: 90px;
+    font-size: 36px;
+  }
+  input {
+    width: 140px;
+  }
 }
