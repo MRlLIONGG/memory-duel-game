@@ -1,5 +1,6 @@
 console.log("script.js loaded");
 
+// Globals for game state
 let currentUser = null;
 const ownerUser = "Owner";
 const ownerPass = "ownerpass";
@@ -9,10 +10,12 @@ let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
 let totalPairs = 0;
-let movesCount = 0;
+
 let timerInterval = null;
 let secondsElapsed = 0;
+let movesCount = 0;
 
+// Emoji sets for difficulties
 const emojiSets = {
   easy: ["🍎", "🍌", "🍇", "🍉"],               // 4 pairs
   medium: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒"],  // 6 pairs
@@ -20,6 +23,7 @@ const emojiSets = {
   extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"] // 10 pairs
 };
 
+// Reveal times (ms)
 const revealTimes = {
   easy: 1500,
   medium: 2000,
@@ -27,34 +31,31 @@ const revealTimes = {
   extreme: 3000
 };
 
-const flipSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-const matchSound = new Audio("https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg");
+// Audio (optional: add your own sound files or base64 data)
+const matchSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
 
-function switchToRegister() {
+// ======= Functions needed by HTML - attach to window =======
+
+window.switchToRegister = function() {
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("register-screen").style.display = "block";
-}
+};
 
-function switchToLogin() {
+window.switchToLogin = function() {
   document.getElementById("auth-screen").style.display = "block";
   document.getElementById("register-screen").style.display = "none";
-}
+};
 
-function register() {
+window.register = function() {
   const u = document.getElementById("register-username").value.trim();
   const p = document.getElementById("register-password").value.trim();
-  const pc = document.getElementById("register-password-confirm").value.trim();
 
-  if (!u || !p || !pc) {
-    alert("Please enter username and both password fields.");
+  if (!u || !p) {
+    alert("Please enter username and password.");
     return;
   }
   if (u === ownerUser) {
     alert("Username 'Owner' is reserved.");
-    return;
-  }
-  if (p !== pc) {
-    alert("Passwords do not match.");
     return;
   }
   if (localStorage.getItem("user_" + u) !== null) {
@@ -64,13 +65,12 @@ function register() {
 
   localStorage.setItem("user_" + u, p);
   alert("Registered successfully!");
-  switchToLogin();
-}
+  window.switchToLogin();
+};
 
-function login() {
+window.login = function() {
   const u = document.getElementById("login-username").value.trim();
   const p = document.getElementById("login-password").value.trim();
-  const remember = document.getElementById("remember-me").checked;
 
   if (!u || !p) {
     alert("Please enter username and password.");
@@ -79,11 +79,6 @@ function login() {
 
   if ((u === ownerUser && p === ownerPass) || localStorage.getItem("user_" + u) === p) {
     currentUser = u;
-    if(remember) {
-      localStorage.setItem("rememberedUser", u);
-    } else {
-      localStorage.removeItem("rememberedUser");
-    }
     document.getElementById("auth-screen").style.display = "none";
     document.getElementById("register-screen").style.display = "none";
     document.getElementById("game-screen").style.display = "block";
@@ -93,13 +88,20 @@ function login() {
     } else {
       document.getElementById("admin-panel").style.display = "none";
     }
-    loadLeaderboard();
+
+    // Remember me
+    const rememberMeCheckbox = document.getElementById("remember-me");
+    if (rememberMeCheckbox && rememberMeCheckbox.checked) {
+      localStorage.setItem("rememberedUser", u);
+    } else {
+      localStorage.removeItem("rememberedUser");
+    }
   } else {
     alert("Wrong username or password.");
   }
-}
+};
 
-function deleteUser() {
+window.deleteUser = function() {
   const u = document.getElementById("delete-user").value.trim();
 
   if (!u) {
@@ -112,30 +114,9 @@ function deleteUser() {
   }
   localStorage.removeItem("user_" + u);
   alert("User deleted if existed.");
-  loadLeaderboard();
-}
-
-// Show/hide password toggle
-document.querySelectorAll(".toggle-password").forEach(span => {
-  span.addEventListener("click", () => {
-    const targetId = span.dataset.target;
-    const input = document.getElementById(targetId);
-    if (input.type === "password") input.type = "text";
-    else input.type = "password";
-  });
-});
-
-// Auto-login remembered user
-window.onload = () => {
-  const remembered = localStorage.getItem("rememberedUser");
-  if (remembered) {
-    document.getElementById("login-username").value = remembered;
-    document.getElementById("remember-me").checked = true;
-  }
 };
 
-// Game logic
-
+// Reset the board and variables before a new game
 function resetBoard() {
   firstCard = null;
   secondCard = null;
@@ -143,18 +124,16 @@ function resetBoard() {
   matchedPairs = 0;
   movesCount = 0;
   secondsElapsed = 0;
-  clearInterval(timerInterval);
   document.getElementById("game-message").textContent = "";
   document.getElementById("game-board").innerHTML = "";
   updateMoves();
   updateTimer();
 }
 
+// When a card is clicked to reveal
 function reveal(card) {
   if (lockBoard) return;
-  if (card === firstCard) return; // Prevent double-click same card
-
-  flipSound.play();
+  if (card === firstCard) return; // prevent double click same card
 
   card.classList.add("flip");
   card.textContent = card.dataset.value;
@@ -219,7 +198,7 @@ function updateMoves() {
   document.getElementById("moves").textContent = `Moves: ${movesCount}`;
 }
 
-function startDuel() {
+window.startDuel = function() {
   resetBoard();
   const level = document.getElementById("level").value;
   const emojis = emojiSets[level];
@@ -255,7 +234,7 @@ function startDuel() {
     lockBoard = false;
     startTimer();
   }, revealTimes[level]);
-}
+};
 
 // Leaderboard
 
@@ -275,6 +254,7 @@ function saveScore() {
 function loadLeaderboard() {
   const leaderboard = JSON.parse(localStorage.getItem("leaderboard") || "[]");
   const list = document.getElementById("leaderboard-list");
+  if (!list) return;
   list.innerHTML = "";
 
   leaderboard.forEach(entry => {
@@ -284,21 +264,48 @@ function loadLeaderboard() {
   });
 }
 
-// Dark mode toggle
+// Dark mode toggle and password toggle inside DOMContentLoaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Toggle password visibility for inputs with class "toggle-password"
+  document.querySelectorAll(".toggle-password").forEach(span => {
+    span.addEventListener("click", () => {
+      const targetId = span.dataset.target;
+      const input = document.getElementById(targetId);
+      if (input.type === "password") input.type = "text";
+      else input.type = "password";
+    });
+  });
 
-document.getElementById("dark-mode-toggle").addEventListener("click", () => {
-  document.body.classList.toggle("dark-mode");
-  if(document.body.classList.contains("dark-mode")) {
-    document.getElementById("dark-mode-toggle").textContent = "☀️ Light Mode";
-  } else {
-    document.getElementById("dark-mode-toggle").textContent = "🌙 Dark Mode";
+  // Load remembered user if any
+  const remembered = localStorage.getItem("rememberedUser");
+  if (remembered) {
+    const loginInput = document.getElementById("login-username");
+    if (loginInput) loginInput.value = remembered;
+    const rememberMeCheckbox = document.getElementById("remember-me");
+    if (rememberMeCheckbox) rememberMeCheckbox.checked = true;
   }
+
+  // Dark mode toggle button
+  const darkToggleBtn = document.getElementById("dark-mode-toggle");
+  if (darkToggleBtn) {
+    darkToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      if(document.body.classList.contains("dark-mode")) {
+        darkToggleBtn.textContent = "☀️ Light Mode";
+      } else {
+        darkToggleBtn.textContent = "🌙 Dark Mode";
+      }
+    });
+  }
+
+  // Load leaderboard if element exists
+  loadLeaderboard();
 });
 
-// Confetti animation (simple)
-
+// Simple confetti animation on win
 function confetti() {
   const canvas = document.getElementById("confetti-canvas");
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
   const W = canvas.width = window.innerWidth;
   const H = canvas.height = window.innerHeight;
