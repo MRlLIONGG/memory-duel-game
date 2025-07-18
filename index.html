@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Adam's First Game</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Memory Card Game - Adam's Game</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Welcome screen -->
-  <div id="welcome-screen">
-    <h1 id="welcome-text">🎉 Welcome to Adam's First Game! 🎉</h1>
+  <div id="welcome-screen" class="animated">
+    <h1>Welcome to Adam's Memory Card Game!</h1>
+    <button id="start-game-btn">Start Game</button>
   </div>
 
-  <!-- Main content -->
-  <div id="main-content" style="display: none;">
-    <h2 class="title">Memory Duel Game</h2>
-    <button onclick="startDuel()">Start Duel</button>
-    <button onclick="openSettings()">Settings</button>
-    <button onclick="chooseDifficulty()">Choose Difficulty</button>
-    <!-- Add more UI buttons as needed -->
+  <div id="game-container" class="hidden">
+    <div class="settings-bar">
+      <button id="toggle-theme-btn">🌙 Dark Mode</button>
+      <button id="toggle-music-btn">🔈 Music: On</button>
+      <button id="leave-game-btn">Leave Game</button>
+    </div>
+
+    <div id="status">
+      <p id="turn-info">Player 1's Turn</p>
+      <p id="score-info">Player 1: 0 | Player 2: 0</p>
+    </div>
+
     <div id="game-board"></div>
   </div>
+
+  <audio id="bg-music" loop>
+    <source src="sounds/background.mp3" type="audio/mpeg" />
+    <!-- fallback here -->
+  </audio>
+
+  <audio id="click-sound" src="sounds/click.mp3"></audio>
+  <audio id="match-sound" src="sounds/match.mp3"></audio>
+  <audio id="win-sound" src="sounds/win.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
