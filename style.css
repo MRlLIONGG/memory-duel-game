@@ -191,3 +191,40 @@ body.party-mode {
   color: #333;
   animation: none;
 }
+
+/* Duel game grid for cards */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: repeat(3, 80px);
+  gap: 15px;
+  margin-top: 20px;
+  user-select: none;
+}
+
+/* Each card styling */
+.card {
+  width: 80px;
+  height: 80px;
+  background: #2196f3;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: #2196f3; /* Hidden emoji color (same as background) */
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background-color 0.3s, color 0.3s;
+}
+.card.flipped {
+  background: white;
+  color: black;
+  cursor: default;
+}
+.card.matched {
+  background: #4caf50;
+  color: white;
+  cursor: default;
+  box-shadow: 0 0 15px #4caf50;
+}
