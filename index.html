@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adam Memory Game</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adam Memory Game</title>
+<link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <!-- Welcome intro -->
   <div id="welcome-screen">Welcome to Adam first game</div>
 
-  <!-- Main menu with login/register -->
-  <div id="main-menu" style="display:none; flex-direction: column; align-items: center; color: white; text-align: center;">
+  <!-- Main menu -->
+  <div id="main-menu" style="display:none;">
     <h1>Adam Memory Game</h1>
-    <div id="auth-container" style="max-width: 350px; background: rgba(0,0,0,0.35); padding: 25px 35px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.7);">
+    <div id="auth-container">
 
       <div id="login-screen">
         <h2>Login</h2>
         <input id="login-username" placeholder="Username" autocomplete="off" />
-        <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
+        <div class="password-container">
+          <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
+          <span id="login-eye" class="eye">👁️</span>
+        </div>
         <button id="login-btn">Login</button>
         <p class="link-text" id="to-register">No account? Register here</p>
       </div>
@@ -27,7 +30,10 @@
       <div id="register-screen" style="display:none;">
         <h2>Register</h2>
         <input id="register-username" placeholder="Username" autocomplete="off" />
-        <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+        <div class="password-container">
+          <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+          <span id="register-eye" class="eye">👁️</span>
+        </div>
         <button id="register-btn">Register</button>
         <p class="link-text" id="to-login">Already have an account? Login here</p>
       </div>
@@ -35,69 +41,43 @@
     </div>
   </div>
 
-  <!-- After login: Game screen -->
-  <div id="game-screen" style="display:none; padding: 20px; text-align: center; color: white; max-width: 720px; margin: auto;">
+  <!-- Game screen -->
+  <div id="game-screen" style="display:none;">
+    <h2>Welcome, <span id="user-display"></span></h2>
 
-    <div style="margin-bottom: 15px;">
-      Logged in as: <strong><span id="user-display"></span></strong>
-      <button id="logout-btn" style="margin-left: 20px; padding:5px 12px; font-size: 0.9rem;">Logout</button>
-      <button id="dark-mode-toggle" style="margin-left: 10px; padding:5px 12px; font-size: 0.9rem;">Toggle Dark Mode</button>
+    <div id="mode-select">
+      <button id="start-duel-btn">Start Duel Mode</button>
+      <button id="start-party-btn">Start Party Mode</button>
+      <button id="toggle-darkmode-btn">Toggle Dark Mode</button>
     </div>
 
-    <!-- Duel Mode Section -->
-    <section id="duel-mode" style="margin-bottom: 40px;">
-      <h2>Duel Mode</h2>
-      <label for="duel-level">Choose Difficulty:</label>
-      <select id="duel-level" style="padding:5px 10px; font-size:1rem; margin-left: 10px;">
+    <!-- Duel settings -->
+    <div id="duel-settings" style="display:none; margin-top:15px;">
+      <label for="duel-level">Choose difficulty:</label>
+      <select id="duel-level">
         <option value="easy">Easy (4 pairs)</option>
         <option value="medium">Medium (6 pairs)</option>
         <option value="hard">Hard (8 pairs)</option>
         <option value="extreme">Extreme (10 pairs)</option>
         <option value="impossible">Impossible (12 pairs)</option>
       </select>
-      <button id="start-duel-btn" style="margin-left: 15px; padding:6px 15px;">Start Duel</button>
+      <button id="duel-start-game-btn">Start Duel Game</button>
+    </div>
 
-      <div id="duel-game-board" style="margin-top: 25px; display: grid; justify-content: center; gap: 12px;"></div>
-      <div id="duel-message" style="margin-top: 15px; font-size: 1.2rem; min-height: 30px;"></div>
-    </section>
+    <!-- Game board and messages -->
+    <div id="game-board"></div>
+    <div id="game-message"></div>
 
-    <!-- Party Mode Section -->
-    <section id="party-mode" style="margin-top: 30px;">
-      <h2>Party Mode (Multiplayer)</h2>
-      <div id="party-setup" style="margin-bottom: 15px;">
-        <button id="create-party-btn" style="margin-right: 10px;">Create Party</button>
-        <input id="join-party-code" placeholder="Enter Party Code" maxlength="4" style="text-transform: uppercase; width: 100px; padding:5px;" />
-        <button id="join-party-btn">Join Party</button>
-        <div id="party-status" style="margin-top: 10px; font-weight: bold;"></div>
-      </div>
-
-      <div id="party-lobby" style="display:none; margin-top: 10px;">
-        <div>Party Code: <strong id="party-code-display"></strong></div>
-        <div>Players in party:
-          <ul id="party-players-list" style="list-style:none; padding-left:0;"></ul>
-        </div>
-
-        <div style="margin-top: 15px;">
-          <div>Vote Difficulty:</div>
-          <div id="party-difficulty-votes" style="margin-top:5px;"></div>
-        </div>
-
-        <div id="party-vote-message" style="margin-top: 12px; font-style: italic; min-height: 24px;"></div>
-      </div>
-
-      <div id="party-game" style="display:none; margin-top: 25px;">
-        <div id="party-turn-info" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 10px;"></div>
-        <div id="party-game-board" style="display: grid; justify-content: center; gap: 12px; max-width: 600px; margin: 0 auto;"></div>
-        <button id="party-end-turn-btn" style="margin-top: 15px; display:none;">End Turn</button>
-        <div id="party-error-info" style="margin-top: 12px; min-height: 30px;"></div>
-      </div>
-
-      <div id="party-winner" style="display:none; margin-top: 20px; font-size: 1.4rem; font-weight: bold;"></div>
-      <button id="party-back-btn" style="display:none; margin-top: 15px;">Back to Menu</button>
-    </section>
-
+    <!-- Back button -->
+    <button id="back-to-menu-btn">Back to Main Menu</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Winner screen -->
+  <div id="winner-screen" style="display:none;">
+    <h2 id="winner-text"></h2>
+    <button id="winner-back-btn">Back to Main Menu</button>
+  </div>
+
+<script src="script.js"></script>
 </body>
 </html>
