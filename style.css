@@ -1,42 +1,44 @@
-/* Base body styles */
+/* General */
+
 body {
-  margin: 0; padding: 0;
-  height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  overflow: hidden;
   background: linear-gradient(270deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
   background-size: 800% 800%;
   animation: gradientBG 20s ease infinite;
+  margin: 0;
+  height: 100vh;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #333;
-  transition: background 0.5s, color 0.5s;
+  overflow-x: hidden;
 }
+
 @keyframes gradientBG {
   0%{background-position:0% 50%;}
   50%{background-position:100% 50%;}
   100%{background-position:0% 50%;}
 }
 
-/* Welcome intro screen */
+/* Welcome screen */
+
 #welcome-screen {
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
   font-size: 3.5rem;
   font-weight: 700;
   text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
+  background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff, #ff416c);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: rainbowText 3s linear infinite, fadeInOut 2.5s forwards;
-  z-index: 10;
+  z-index: 1000;
 }
+
 @keyframes rainbowText {
   0% {background-position: 0% 50%;}
   100% {background-position: 400% 50%;}
@@ -48,183 +50,86 @@ body {
   100% {opacity: 0; visibility: hidden;}
 }
 
-/* Main menu container */
-#main-menu {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  max-width: 360px;
-  background: rgba(255, 255, 255, 0.85);
-  border-radius: 15px;
-  padding: 30px 25px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-#main-menu h1 {
-  font-size: 3rem;
-  margin-bottom: 20px;
-  color: #333;
-  user-select: none;
-}
-
-/* Login/Register container */
-#auth-container {
-  width: 100%;
-}
-input {
-  width: 100%;
-  font-size: 1rem;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 8px;
-  border: 2px solid #90caf9;
-  box-sizing: border-box;
-}
-button {
-  width: 100%;
-  padding: 12px;
-  margin-top: 15px;
-  background: #64b5f6;
-  border: none;
-  border-radius: 8px;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  user-select: none;
-}
-button:hover {
-  background: #42a5f5;
-}
-
-/* Toggle password eye icon */
-.password-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.password-container input {
-  flex-grow: 1;
-  margin-right: 8px;
-}
-.eye {
-  cursor: pointer;
-  user-select: none;
-  font-size: 1.2rem;
-  color: #555;
-  user-select: none;
-}
-.eye:hover {
-  color: #000;
-}
-
 /* Link text */
-p.link-text {
-  color: #1976d2;
+
+.link-text {
+  color: #ff99a9;
   cursor: pointer;
   margin-top: 12px;
   user-select: none;
-  font-weight: 600;
 }
-p.link-text:hover {
+.link-text:hover {
   text-decoration: underline;
 }
 
-/* Game screen */
-#game-screen {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  max-width: 800px;
-  width: 90vw;
-  padding: 20px;
-  border-radius: 15px;
-  background: rgba(255,255,255,0.95);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-}
+/* Buttons */
 
-#game-message {
-  margin: 15px 0;
-  font-size: 1.2rem;
-  user-select: none;
-}
-
-/* Winner screen */
-#winner-screen {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  max-width: 400px;
-  padding: 20px;
-  background: rgba(255,255,255,0.95);
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-}
-#winner-text {
-  font-size: 1.8rem;
-  margin-bottom: 20px;
-  user-select: none;
-}
-
-/* Mode buttons container */
-#mode-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-/* Background modes */
-body.dark-mode {
-  background: linear-gradient(135deg, #121212, #1e1e1e);
+button {
+  background: #ff416c;
+  border: none;
   color: white;
-  animation: none;
+  font-size: 1.1rem;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(255,65,108,0.7);
+  transition: background-color 0.3s ease;
 }
-body.duel-mode {
-  background: linear-gradient(135deg, #283e51, #485563);
-  color: white;
-  animation: none;
-}
-body.party-mode {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-  color: #333;
-  animation: none;
+button:hover {
+  background: #ff1e50;
 }
 
-/* Duel game grid for cards */
-.game-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 80px);
-  grid-template-rows: repeat(3, 80px);
-  gap: 15px;
-  margin-top: 20px;
+/* Duel cards grid */
+
+#duel-game-board {
+  max-width: 600px;
+  margin: 0 auto;
   user-select: none;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
 }
 
-/* Each card styling */
+/* Card style */
+
 .card {
   width: 80px;
-  height: 80px;
-  background: #2196f3;
-  border-radius: 12px;
+  height: 110px;
+  background-color: #2980b9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-size: 50px;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
-  color: #2196f3; /* Hidden emoji color (same as background) */
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  transition: background-color 0.3s, color 0.3s;
+  transform-style: preserve-3d;
+  perspective: 600px;
+  position: relative;
+  user-select: none;
+  transition: transform 0.6s;
+  transform-origin: center;
+  text-shadow: 1px 1px 3px #000;
 }
-.card.flipped {
-  background: white;
-  color: black;
-  cursor: default;
+
+/* Flipped state */
+
+.card.flip {
+  transform: rotateY(180deg);
+  background-color: #27ae60;
 }
-.card.matched {
-  background: #4caf50;
+
+/* Dark Mode */
+
+.dark-mode {
+  background: #121212;
   color: white;
-  cursor: default;
-  box-shadow: 0 0 15px #4caf50;
+}
+
+.dark-mode #duel-game-board .card {
+  background-color: #444;
+}
+
+.dark-mode #duel-game-board .card.flip {
+  background-color: #2ecc71;
 }
