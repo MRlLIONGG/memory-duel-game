@@ -1,64 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Memory Duel - Made by Adam</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Adam's First Game</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="title">🧠 Memory Duel - Made by Adam</div>
 
-  <div id="auth-screen">
-    <h2>Login</h2>
-    <input id="login-username" placeholder="Username" autocomplete="off" />
-    <input id="login-password" placeholder="Password" type="password" autocomplete="off" />
-    <button onclick="login()">Login</button>
-    <p onclick="switchToRegister()">No account? Register</p>
+  <!-- Welcome screen -->
+  <div id="welcome-screen">
+    <h1 id="welcome-text">🎉 Welcome to Adam's First Game! 🎉</h1>
   </div>
 
-  <div id="register-screen" style="display:none;">
-    <h2>Register</h2>
-    <input id="register-username" placeholder="Username" autocomplete="off" />
-    <input id="register-password" placeholder="Password" type="password" autocomplete="off" />
-    <button onclick="register()">Register</button>
-    <p onclick="switchToLogin()">Already have an account? Login</p>
-  </div>
-
-  <div id="game-screen" style="display:none;">
-    <h2>Welcome, <span id="user-display"></span></h2>
-
-    <div id="level-select">
-      <label for="level">Choose difficulty:</label>
-      <select id="level">
-        <option value="easy">Easy (4 pairs)</option>
-        <option value="medium">Medium (6 pairs)</option>
-        <option value="hard">Hard (8 pairs)</option>
-        <option value="extreme">Extreme (10 pairs)</option>
-      </select>
-    </div>
-
-    <button id="start-button" onclick="startDuel()">Start Duel</button>
-    <button id="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    <button id="settings-button" onclick="toggleSettings()">Settings</button>
-
-    <div id="settings-panel" style="display:none; margin-top: 10px; color: white;">
-      <h3>Settings</h3>
-      <label for="bgm-volume">Background Music Volume:</label>
-      <input type="range" id="bgm-volume" min="0" max="1" step="0.01" value="0.5" oninput="adjustBgmVolume(this.value)" />
-      <br />
-      <label for="sfx-volume">Game Sound Volume:</label>
-      <input type="range" id="sfx-volume" min="0" max="1" step="0.01" value="0.5" oninput="adjustSfxVolume(this.value)" />
-    </div>
-
-    <div id="admin-panel" style="display:none;">
-      <h3>Owner Panel</h3>
-      <input id="delete-user" placeholder="Username to delete" autocomplete="off" />
-      <button onclick="deleteUser()">Delete User</button>
-    </div>
-
+  <!-- Main content -->
+  <div id="main-content" style="display: none;">
+    <h2 class="title">Memory Duel Game</h2>
+    <button onclick="startDuel()">Start Duel</button>
+    <button onclick="openSettings()">Settings</button>
+    <button onclick="chooseDifficulty()">Choose Difficulty</button>
+    <!-- Add more UI buttons as needed -->
     <div id="game-board"></div>
-    <div id="game-message"></div>
   </div>
 
   <script src="script.js"></script>
