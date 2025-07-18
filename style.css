@@ -1,141 +1,236 @@
-/* Basic Reset */
-* {
-  box-sizing: border-box;
+body {
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
+  text-align: center;
   margin: 0;
   padding: 0;
-}
-
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f0f0;
-  color: #222;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  min-height: 100vh;
+  overflow-x: hidden;
+  background-attachment: fixed;
+  animation: bgAnim 20s linear infinite;
   transition: background-color 0.5s, color 0.5s;
 }
 
-.hidden {
-  display: none;
+@keyframes bgAnim {
+  0% {background-position: 0 0;}
+  100% {background-position: 1000px 0;}
 }
 
-#welcome-screen {
-  margin-top: 100px;
-  text-align: center;
-  animation: fadeInScale 1.5s ease forwards;
-}
-
-@keyframes fadeInScale {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-#start-game-btn {
-  margin-top: 20px;
-  padding: 10px 30px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  border: none;
-  background-color: #0077ff;
-  color: white;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-#start-game-btn:hover {
-  background-color: #005fcc;
-}
-
-.settings-bar {
+.title {
+  font-size: 2.5rem;
   margin: 20px 0;
+  text-shadow: 2px 2px 8px #000;
+  user-select: none;
 }
 
-.settings-bar button {
-  margin: 0 8px;
-  padding: 8px 14px;
+input {
+  padding: 10px;
+  margin: 5px;
   font-size: 1rem;
-  cursor: pointer;
+  border-radius: 5px;
   border: none;
-  border-radius: 6px;
-  background-color: #0077ff;
+  width: 200px;
+}
+
+button {
+  background-color: #2980b9;
+  border: none;
+  padding: 10px 25px;
   color: white;
-  transition: background-color 0.3s ease;
-}
-
-.settings-bar button:hover {
-  background-color: #005fcc;
-}
-
-#status {
-  margin-bottom: 15px;
   font-weight: bold;
-  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1c5980;
 }
 
 #game-board {
-  width: 520px;
+  margin-top: 20px;
+  max-width: 600px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+  gap: 12px;
+  justify-content: center;
+  user-select: none;
 }
 
 .card {
-  background-color: #ffffff;
-  border-radius: 12px;
-  height: 120px;
-  cursor: pointer;
-  position: relative;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-  user-select: none;
+  width: 80px;
+  height: 110px;
+  background-color: #2980b9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-size: 50px;
+  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3rem;
-  color: #0077ff;
-  transition: transform 0.3s;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 600px;
+  position: relative;
+  user-select: none;
+  transition: transform 0.6s;
 }
 
-.card.flipped {
-  background-color: #0077ff;
-  color: white;
-  cursor: default;
+.card.flip {
   transform: rotateY(180deg);
 }
 
-.card.matched {
-  background-color: #28a745;
+#game-message {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  height: 25px;
+}
+
+#admin-panel {
+  margin-top: 25px;
+}
+
+#level-select {
+  margin-bottom: 10px;
+}
+
+#stats {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Style for clickable paragraphs for switching screens */
+#auth-screen p,
+#register-screen p {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+#auth-screen p:hover,
+#register-screen p:hover {
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+.password-container {
+  position: relative;
+  width: 220px;
+  margin: 5px auto;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 30px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  color: #ddd;
+}
+
+.toggle-password:hover {
   color: white;
-  cursor: default;
+}
+
+.remember-me {
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  display: inline-block;
+  cursor: pointer;
+  user-select: none;
+}
+
+#dark-mode-toggle {
+  margin-top: 15px;
+  background-color: #444;
+  padding: 8px 20px;
+  border-radius: 6px;
+}
+
+#dark-mode-toggle:hover {
+  background-color: #666;
+}
+
+#leaderboard {
+  margin-top: 30px;
+  width: 250px;
+  text-align: left;
+}
+
+#leaderboard h3 {
+  margin-bottom: 8px;
+  font-weight: 700;
+  border-bottom: 2px solid white;
+  padding-bottom: 5px;
+}
+
+#leaderboard-list {
+  list-style: decimal inside;
+  max-height: 150px;
+  overflow-y: auto;
+  padding-left: 5px;
 }
 
 .dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
+  background: linear-gradient(135deg, #121212, #222);
+  color: #ddd;
 }
 
-.dark-mode #game-board .card {
-  background-color: #1e1e1e;
-  color: #90caf9;
-  box-shadow: 0 0 8px #333;
-}
-
-.dark-mode #game-board .card.flipped {
-  background-color: #90caf9;
-  color: #121212;
-}
-
-.dark-mode .settings-bar button {
+.dark-mode input {
   background-color: #333;
-  color: #eee;
+  color: #ddd;
 }
 
-.dark-mode .settings-bar button:hover {
+.dark-mode button {
   background-color: #555;
+}
+
+.dark-mode button:hover {
+  background-color: #777;
+}
+
+.dark-mode .card {
+  background-color: #333;
+  color: #90caf9;
+  box-shadow: 0 0 8px #555;
+}
+
+.dark-mode .card.flip {
+  color: #121212;
+  background-color: #90caf9;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .card {
+    width: 60px;
+    height: 85px;
+    font-size: 38px;
+  }
+
+  #leaderboard {
+    width: 90%;
+  }
+
+  input, button {
+    width: 90%;
+  }
 }
