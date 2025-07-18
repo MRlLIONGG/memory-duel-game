@@ -122,6 +122,8 @@ select {
   cursor: pointer;
   user-select: none;
   transition: transform 0.3s ease;
+  perspective: 600px;
+  backface-visibility: hidden;
 }
 .card.flip {
   transform: rotateY(180deg);
