@@ -14,7 +14,7 @@ window.onload = () => {
       currentUser = remembered;
       showMenu();
     }
-  }, 3000);
+  }, 2500); // matches intro fade duration
 
   document.getElementById('login-eye').onclick = () => togglePassword('login-password');
   document.getElementById('register-eye').onclick = () => togglePassword('register-password');
@@ -33,20 +33,20 @@ function toggleRegister() {
 }
 
 function register() {
-  const user = document.getElementById('register-username').value;
-  const pass = document.getElementById('register-password').value;
-  if (!user || !pass) return alert("Fill all fields.");
-  if (localStorage.getItem(`user_${user}`)) return alert("User exists.");
+  const user = document.getElementById('register-username').value.trim();
+  const pass = document.getElementById('register-password').value.trim();
+  if (!user || !pass) return alert("Please fill in all fields.");
+  if (localStorage.getItem(`user_${user}`)) return alert("User already exists.");
   localStorage.setItem(`user_${user}`, pass);
   alert("Registered! You can now log in.");
   toggleRegister();
 }
 
 function login() {
-  const user = document.getElementById('login-username').value;
-  const pass = document.getElementById('login-password').value;
+  const user = document.getElementById('login-username').value.trim();
+  const pass = document.getElementById('login-password').value.trim();
   const storedPass = localStorage.getItem(`user_${user}`);
-  if (storedPass !== pass) return alert("Wrong credentials.");
+  if (storedPass !== pass) return alert("Wrong username or password.");
   currentUser = user;
   if (document.getElementById('remember-login').checked) {
     localStorage.setItem('rememberedUser', user);
@@ -72,7 +72,7 @@ function logout() {
 }
 
 function deleteAccount() {
-  if (!confirm("Are you sure?")) return;
+  if (!confirm("Are you sure you want to delete your account?")) return;
   localStorage.removeItem(`user_${currentUser}`);
   logout();
 }
@@ -95,7 +95,8 @@ function updateTurnText() {
 }
 
 function endTurn() {
-  playerErrors[currentTurn] += Math.floor(Math.random() * 5); // Random errors
+  // Simulate errors made randomly (for demo)
+  playerErrors[currentTurn] += Math.floor(Math.random() * 5);
   currentTurn++;
   if (currentTurn >= partyPlayers.length) {
     showWinner();
