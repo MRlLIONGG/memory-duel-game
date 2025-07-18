@@ -5,55 +5,197 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Adam Memory Game</title>
 <style>
+  /* Background gradient with subtle animation */
   body {
     margin: 0; padding: 0;
-    font-family: Arial, sans-serif;
+    height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+    background: linear-gradient(270deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
+    background-size: 800% 800%;
+    animation: gradientBG 20s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  #intro-screen {
-    position: fixed;
+  @keyframes gradientBG {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+
+  /* Welcome screen container */
+  #welcome-screen {
+    position: absolute;
     top:0; left:0; right:0; bottom:0;
-    background: black;
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
-    font-size: 2.5em;
-    animation: fadeOut 2.5s ease forwards;
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+    animation: fadeInOut 2.5s ease forwards;
+    /* Rainbow text animation */
+    background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff, #ff416c);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rainbowText 3s linear infinite, fadeInOut 2.5s forwards;
   }
-  @keyframes fadeOut {
-    0% {opacity: 1;}
-    80% {opacity: 1;}
+
+  @keyframes rainbowText {
+    0% {background-position: 0% 50%;}
+    100% {background-position: 400% 50%;}
+  }
+  @keyframes fadeInOut {
+    0% {opacity: 0;}
+    10% {opacity: 1;}
+    90% {opacity: 1;}
     100% {opacity: 0; visibility: hidden;}
   }
-  #auth-screen {
+
+  /* Main menu container (hidden by default) */
+  #main-menu {
     display: none;
-    padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    color: white;
     text-align: center;
+  }
+
+  #main-menu h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  }
+
+  button {
+    background: #ff416c;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    padding: 12px 30px;
+    margin: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(255,65,108,0.7);
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background: #ff1e50;
+  }
+
+  /* Login/Register forms */
+  #auth-container {
+    background: rgba(0,0,0,0.35);
+    padding: 25px 35px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    max-width: 350px;
+  }
+  input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+  }
+  p.link-text {
+    color: #ff99a9;
+    cursor: pointer;
+    margin-top: 12px;
+    user-select: none;
+  }
+  p.link-text:hover {
+    text-decoration: underline;
   }
 </style>
 </head>
 <body>
 
-<div id="intro-screen">Welcome to Adam first game</div>
+  <!-- Welcome intro -->
+  <div id="welcome-screen">Welcome to Adam first game</div>
 
-<div id="auth-screen">
-  <h2>Login</h2>
-  <input id="login-username" placeholder="Username" />
-  <input id="login-password" type="password" placeholder="Password" />
-  <button onclick="login()">Login</button>
-</div>
+  <!-- Main menu with login/register -->
+  <div id="main-menu">
+    <h1>Adam Memory Game</h1>
+    <div id="auth-container">
+
+      <div id="login-screen">
+        <h2>Login</h2>
+        <input id="login-username" placeholder="Username" autocomplete="off" />
+        <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
+        <button id="login-btn">Login</button>
+        <p class="link-text" id="to-register">No account? Register here</p>
+      </div>
+
+      <div id="register-screen" style="display:none;">
+        <h2>Register</h2>
+        <input id="register-username" placeholder="Username" autocomplete="off" />
+        <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+        <button id="register-btn">Register</button>
+        <p class="link-text" id="to-login">Already have an account? Login here</p>
+      </div>
+
+    </div>
+  </div>
 
 <script>
-  window.onload = function() {
-    setTimeout(function() {
-      document.getElementById('intro-screen').style.display = 'none';
-      document.getElementById('auth-screen').style.display = 'block';
+  // After 2.5 seconds, hide welcome and show main menu
+  window.onload = () => {
+    setTimeout(() => {
+      document.getElementById('welcome-screen').style.display = 'none';
+      document.getElementById('main-menu').style.display = 'flex';
     }, 2500);
   };
 
-  function login() {
-    alert("Login clicked! Username: " + document.getElementById('login-username').value);
-  }
+  // Switch screens
+  const toRegister = document.getElementById('to-register');
+  const toLogin = document.getElementById('to-login');
+  const loginScreen = document.getElementById('login-screen');
+  const registerScreen = document.getElementById('register-screen');
+
+  toRegister.onclick = () => {
+    loginScreen.style.display = 'none';
+    registerScreen.style.display = 'block';
+  };
+  toLogin.onclick = () => {
+    registerScreen.style.display = 'none';
+    loginScreen.style.display = 'block';
+  };
+
+  // User registration & login logic using localStorage (demo purpose)
+  const ownerUser = 'Owner';
+  const ownerPass = 'ownerpass';
+
+  document.getElementById('register-btn').onclick = () => {
+    let u = document.getElementById('register-username').value.trim();
+    let p = document.getElementById('register-password').value.trim();
+
+    if (!u || !p) return alert('Please enter username and password.');
+    if (u === ownerUser) return alert('Username "Owner" is reserved.');
+    if (localStorage.getItem('user_' + u) !== null) return alert('Username already taken.');
+
+    localStorage.setItem('user_' + u, p);
+    alert('Registered successfully! Please login.');
+    toLogin.onclick();
+  };
+
+  document.getElementById('login-btn').onclick = () => {
+    let u = document.getElementById('login-username').value.trim();
+    let p = document.getElementById('login-password').value.trim();
+
+    if (!u || !p) return alert('Please enter username and password.');
+
+    if ((u === ownerUser && p === ownerPass) || localStorage.getItem('user_' + u) === p) {
+      alert('Welcome, ' + u + '! Login successful.');
+      // Here you can add code to transition to your actual game screen
+    } else {
+      alert('Wrong username or password.');
+    }
+  };
 </script>
 
 </body>
