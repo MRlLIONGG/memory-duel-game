@@ -1,49 +1,162 @@
+/* General styling */
 body {
-  font-family: Arial, sans-serif;
-  background: #121212;
-  color: #fff;
+  margin: 0; padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #222;
+  user-select: none;
+}
+
+#main-container {
+  width: 100%;
+  max-width: 700px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  margin-top: 0;
   text-align: center;
-  margin-top: 100px;
-  transition: background 1s ease;
+  color: #333;
 }
 
 button {
-  display: block;
-  margin: 10px auto;
-  padding: 10px 20px;
-  font-size: 18px;
-  background: #00bcd4;
+  cursor: pointer;
+  background-color: #2980b9;
   border: none;
   color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  font-weight: 700;
+  padding: 12px 25px;
+  margin: 10px 5px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+  user-select: none;
 }
 
 button:hover {
-  background: #008ba3;
+  background-color: #1c5980;
 }
 
-.screen {
-  display: none;
+input, select {
+  font-size: 1rem;
+  padding: 8px 12px;
+  margin: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: calc(100% - 34px);
+  box-sizing: border-box;
 }
 
-.screen.active {
-  display: block;
+.password-wrapper {
+  position: relative;
+  width: 100%;
+  display: inline-block;
 }
 
-.hidden {
-  display: none;
+.password-wrapper input {
+  width: 100%;
+  padding-right: 35px;
+  box-sizing: border-box;
 }
 
-#intro-screen {
-  font-size: 30px;
-  animation: fadeInOut 2s ease-in-out;
+.eye {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; }
-  25% { opacity: 1; }
-  75% { opacity: 1; }
-  100% { opacity: 0; }
+.link-text {
+  color: #2980b9;
+  cursor: pointer;
+  margin-top: 10px;
+  text-align: center;
+  user-select: none;
+}
+
+.link-text:hover {
+  text-decoration: underline;
+}
+
+/* Welcome Screen */
+#welcome-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: #2980b9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;
+  z-index: 1000;
+  user-select: none;
+  animation: fadeOut 2.5s forwards;
+}
+
+@keyframes fadeOut {
+  0% {opacity: 1;}
+  90% {opacity: 1;}
+  100% {opacity: 0; visibility: hidden;}
+}
+
+/* Game Boards */
+#duel-game-board,
+#party-game-board {
+  margin-top: 15px;
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  user-select: none;
+}
+
+.card {
+  width: 80px;
+  height: 110px;
+  background-color: #2980b9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-size: 50px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s;
+  backface-visibility: hidden;
+  position: relative;
+}
+
+.card.flip {
+  background-color: #3498db;
+  transform: rotateY(180deg);
+  box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+#duel-game-message,
+#party-message {
+  margin-top: 12px;
+  font-weight: 700;
+  color: #e74c3c;
+  min-height: 25px;
+  user-select: none;
+}
+
+.btn-back {
+  background-color: #bdc3c7;
+  color: #2c3e50;
+}
+
+.btn-back:hover {
+  background-color: #95a5a6;
 }
