@@ -4,53 +4,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Adam Memory Game</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div id="welcome" class="centered colorful-text">Welcome to Adam first game</div>
 
-  <div id="main-menu" class="hidden">
+  <!-- Intro screen -->
+  <div id="intro-screen" class="screen">
+    <h1>Welcome to Adam first game</h1>
+  </div>
+
+  <!-- Main Menu -->
+  <div id="main-menu" class="screen hidden">
     <h1>Adam Memory Game</h1>
     <button onclick="showLogin()">Login</button>
     <button onclick="showRegister()">Register</button>
-    <button onclick="startDuel()">Start Duel</button>
-    <button onclick="startParty()">Start Party</button>
-    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    <button onclick="showSettings()">Settings</button>
   </div>
 
-  <div id="auth-container" class="hidden">
-    <h2 id="auth-title">Login</h2>
-    <input type="text" id="username" placeholder="Username" /><br />
-    <input type="password" id="password" placeholder="Password" />
-    <span onclick="togglePassword()" class="eye">👁️</span><br />
-    <button onclick="submitAuth()">Submit</button>
+  <!-- Login Form -->
+  <div id="login-screen" class="screen hidden">
+    <h2>Login</h2>
+    <input type="text" placeholder="Username" id="login-user" />
+    <input type="password" placeholder="Password" id="login-pass" />
+    <button onclick="toggleEye('login-pass')">👁️</button>
+    <button onclick="login()">Login</button>
     <button onclick="backToMenu()">Back</button>
   </div>
 
-  <div id="difficulty-select" class="hidden">
-    <h2>Select Difficulty</h2>
-    <button onclick="beginGame('easy')">Easy</button>
-    <button onclick="beginGame('medium')">Medium</button>
-    <button onclick="beginGame('hard')">Hard</button>
-    <button onclick="beginGame('extreme')">Extreme</button>
-    <button onclick="beginGame('impossible')">Impossible</button>
+  <!-- Register Form -->
+  <div id="register-screen" class="screen hidden">
+    <h2>Register</h2>
+    <input type="text" placeholder="Username" id="register-user" />
+    <input type="password" placeholder="Password" id="register-pass" />
+    <button onclick="toggleEye('register-pass')">👁️</button>
+    <button onclick="register()">Register</button>
     <button onclick="backToMenu()">Back</button>
   </div>
 
-  <div id="game-container" class="hidden"></div>
-
-  <div id="party-container" class="hidden">
-    <h2>Party Mode</h2>
-    <div id="party-status"></div>
-    <input id="party-code" placeholder="Enter Party Code" />
-    <button onclick="joinParty()">Join</button>
-    <button onclick="createParty()">Create</button>
+  <!-- Settings -->
+  <div id="settings-screen" class="screen hidden">
+    <h2>Settings</h2>
+    <label>Master Volume: <input type="range" id="master-volume" min="0" max="1" step="0.01" /></label>
+    <label>Music Volume: <input type="range" id="music-volume" min="0" max="1" step="0.01" /></label>
     <button onclick="backToMenu()">Back</button>
   </div>
 
-  <audio id="click-sound" src="click.mp3"></audio>
-  <audio id="flip-sound" src="flip.mp3"></audio>
-  <audio id="win-sound" src="win.mp3"></audio>
+  <audio id="bg-music" loop src="sounds/music.mp3"></audio>
+  <audio id="click-sound" src="sounds/click.mp3"></audio>
 
   <script src="script.js"></script>
 </body>
