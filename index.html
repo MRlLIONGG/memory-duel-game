@@ -44,25 +44,25 @@
     <!-- MENU SCREEN -->
     <div id="menu-screen" style="display:none;">
       <h1>Adam Memory Game</h1>
-      <button id="btn-duel">Duel Mode</button>
-      <button id="btn-party">Party Mode</button>
-      <button id="btn-settings">Settings</button>
-      <button id="btn-logout">Logout</button>
+      <button id="btn-duel" class="main-btn">Duel Mode</button>
+      <button id="btn-party" class="main-btn">Party Mode</button>
+      <button id="btn-settings" class="main-btn">Settings</button>
+      <button id="btn-logout" class="main-btn logout-btn">Logout</button>
     </div>
 
     <!-- DUEL SCREEN -->
     <div id="duel-screen" style="display:none;">
       <h2>Duel Mode</h2>
       <label for="duel-difficulty">Choose difficulty:</label>
-      <select id="duel-difficulty">
+      <select id="duel-difficulty" class="select-input">
         <option value="easy">Easy (4 pairs)</option>
         <option value="medium">Medium (6 pairs)</option>
         <option value="hard">Hard (8 pairs)</option>
         <option value="extreme">Extreme (10 pairs)</option>
         <option value="impossible">Impossible (12 pairs)</option>
       </select>
-      <button id="start-duel-btn">Start Duel</button>
-      <button class="btn-back">Back to Menu</button>
+      <button id="start-duel-btn" class="action-btn">Start Duel</button>
+      <button class="btn-back action-btn">Back to Menu</button>
 
       <div id="duel-game-board"></div>
       <div id="duel-game-message"></div>
@@ -71,15 +71,22 @@
     <!-- PARTY SCREEN -->
     <div id="party-screen" style="display:none;">
       <h2>Party Mode</h2>
-      <button id="create-party-btn">Create Party</button>
-      <input id="join-party-code" placeholder="Enter Party Code" />
-      <button id="join-party-btn">Join Party</button>
-      <button class="btn-back">Back to Menu</button>
+      <div class="party-controls">
+        <button id="create-party-btn" class="action-btn">Create Party</button>
+        <input id="join-party-code" placeholder="Enter Party Code" class="input-code" />
+        <button id="join-party-btn" class="action-btn">Join Party</button>
+      </div>
 
-      <div id="party-info"></div>
+      <div id="party-info" class="party-info"></div>
       <div id="party-game-board"></div>
       <div id="party-game-message"></div>
-      <button id="party-end-turn" style="display:none;">End Turn</button>
+
+      <div class="party-buttons">
+        <button id="party-end-turn" class="action-btn" style="display:none;">End Turn</button>
+        <button id="party-leave-btn" class="leave-btn" style="display:none;">Leave Party</button>
+      </div>
+
+      <button class="btn-back action-btn">Back to Menu</button>
     </div>
 
     <!-- SETTINGS SCREEN -->
@@ -89,7 +96,7 @@
       <input id="master-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
       <label for="music-volume">Music Volume:</label>
       <input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
-      <button class="btn-back">Back to Menu</button>
+      <button class="btn-back action-btn">Back to Menu</button>
     </div>
 
   </div>
