@@ -21,6 +21,7 @@
     <h2>Register</h2>
     <input id="register-username" placeholder="Username" autocomplete="off" />
     <input id="register-password" placeholder="Password" type="password" autocomplete="off" />
+    <input id="register-password-confirm" placeholder="Confirm Password" type="password" autocomplete="off" />
     <button onclick="register()">Register</button>
     <p onclick="switchToLogin()">Already have an account? Login</p>
   </div>
@@ -38,7 +39,17 @@
       </select>
     </div>
 
-    <button id="start-button" onclick="startDuel()">Start Duel</button>
+    <div class="game-controls">
+      <button id="start-button" onclick="startDuel()">Start Duel</button>
+      <button id="reset-button" onclick="resetBoard()" disabled>Reset</button>
+      <button id="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <div id="status-bar">
+      <div>Time: <span id="timer">0</span> seconds</div>
+      <div>Moves: <span id="moves">0</span></div>
+      <div>Score: <span id="score">0</span> / <span id="total-pairs">0</span></div>
+    </div>
 
     <div id="admin-panel" style="display:none;">
       <h3>Owner Panel</h3>
@@ -46,8 +57,11 @@
       <button onclick="deleteUser()">Delete User</button>
     </div>
 
-    <div id="game-board"></div>
-    <div id="game-message"></div>
+    <div id="game-board" tabindex="0" aria-label="Memory Duel Game Board"></div>
+    <div id="game-message" role="alert" aria-live="assertive"></div>
+
+    <h3>Leaderboard</h3>
+    <ol id="leaderboard"></ol>
   </div>
 
   <script src="script.js"></script>
