@@ -1,8 +1,9 @@
 let currentUser = null;
-let partyPlayers = [];
+let partyPlayersData = [];
 let currentTurn = 0;
 let playerErrors = [];
 let partyCode = null;
+
 let duelCards = [];
 let duelFirstCard = null;
 let duelSecondCard = null;
@@ -33,14 +34,13 @@ window.onload = () => {
     }, 1000);
   }, 2500);
 
-  // Set audio volumes on load
   setVolumes();
   masterVolumeControl?.addEventListener('input', setVolumes);
   musicVolumeControl?.addEventListener('input', setVolumes);
 
   bgMusic.play().catch(() => {});
 
-  // Eye toggles
+  // Password eye toggles
   document.getElementById('login-eye').onclick = () => togglePassword('login-password');
   document.getElementById('register-eye').onclick = () => togglePassword('register-password');
 
@@ -78,7 +78,7 @@ window.onload = () => {
   // Duel mode
   document.getElementById('start-duel-btn').onclick = startDuel;
 
-  // Party mode buttons
+  // Party mode
   document.getElementById('create-party-btn').onclick = createParty;
   document.getElementById('join-party-btn').onclick = joinParty;
   document.getElementById('party-end-turn').onclick = endPartyTurn;
@@ -103,6 +103,12 @@ function switchAuthScreens(screen) {
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('register-screen').style.display = 'block';
   }
+}
+
+function showAuthScreen() {
+  document.getElementById('auth-container').style.display = 'block';
+  switchAuthScreens('login');
+  hideAllScreens();
 }
 
 function register() {
@@ -224,8 +230,10 @@ function flipCard(card) {
 
 // Party mode logic
 
-let partyPlayersData = [];
 let partyTurnTimer = null;
+let partyFirstCard = null;
+let partySecondCard = null;
+let partyLockBoard = false;
 
 function createParty() {
   partyPlayersData = [{name: currentUser, errors: 0}];
@@ -266,7 +274,7 @@ function startPartyGame() {
 }
 
 function renderPartyCards() {
-  // Simple 6 pairs emoji set
+  // Simple 6 pairs emoji set for party mode
   const emojis = emojiSets.medium;
   let cards = shuffle([...emojis, ...emojis]);
   const board = document.getElementById('party-game-board');
@@ -286,10 +294,6 @@ function renderPartyCards() {
   partyLockBoard = false;
 }
 
-let partyFirstCard = null;
-let partySecondCard = null;
-let partyLockBoard = false;
-
 function partyFlipCard(card) {
   if(partyLockBoard) return;
   if(card.classList.contains('flip')) return;
@@ -304,7 +308,6 @@ function partyFlipCard(card) {
     partyLockBoard = true;
 
     if(partyFirstCard.dataset.emoji === partySecondCard.dataset.emoji) {
-      // Matched
       partyFirstCard = null;
       partySecondCard = null;
       partyLockBoard = false;
@@ -351,7 +354,7 @@ function nextTurn() {
 function generatePartyCode() {
   return Math.random().toString(36).substring(2, 7).toUpperCase();
 }
- 
+
 // Fisher-Yates shuffle
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
