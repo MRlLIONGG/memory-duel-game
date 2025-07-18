@@ -1,302 +1,265 @@
-let currentUser = null;
-let partyPlayers = [];
-let currentTurn = 0;
-let playerErrors = [0, 0];
-let duelCards = [];
-let firstCard = null;
-let secondCard = null;
-let lockBoard = false;
-let matchedPairs = 0;
-let totalPairs = 0;
-let duelTimer = null;
-let partyTimer = null;
-let partyTimeoutSeconds = 5;
-let musicPlaying = false;
-
-const emojiSets = {
-  easy: ["🍎", "🍌", "🍇", "🍉"],
-  medium: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒"],
-  hard: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍"],
-  extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"],
-  impossible: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑", "🍔", "🍕"]
-};
-
-const bgMusic = document.getElementById('bg-music');
-const flipSound = document.getElementById('flip-sound');
-const matchSound = document.getElementById('match-sound');
-const failSound = document.getElementById('fail-sound');
-
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
+  // Welcome screen fadeout
   setTimeout(() => {
     document.getElementById('welcome-screen').style.display = 'none';
-    document.getElementById('main-menu').style.display = 'flex';
+    showMainMenu();
   }, 2500);
 
-  // Eye toggle handlers
-  document.getElementById('login-eye').onclick = () => togglePassword('login-password');
-  document.getElementById('register-eye').onclick = () => togglePassword('register-password');
+  // Elements
+  const mainMenu = document.getElementById('main-menu');
+  const loginScreen = document.getElementById('login-screen');
+  const registerScreen = document.getElementById('register-screen');
+  const toRegister = document.getElementById('to-register');
+  const toLogin = document.getElementById('to-login');
+  const loginBtn = document.getElementById('login-btn');
+  const registerBtn = document.getElementById('register-btn');
+  const loginEye = document.getElementById('login-eye');
+  const registerEye = document.getElementById('register-eye');
+  const gameScreen = document.getElementById('game-screen');
+  const userDisplay = document.getElementById('user-display');
+  const logoutBtn = document.getElementById('logout-btn');
+  const toggleDarkBtn = document.getElementById('toggle-dark-btn');
+  const backMainBtnGame = document.getElementById('back-main-btn-game');
+  const startDuelBtn = document.getElementById('start-duel-btn');
+  const levelSelect = document.getElementById('level');
+  const gameBoard = document.getElementById('game-board');
+  const gameMessage = document.getElementById('game-message');
 
-  // Switch auth screens
-  document.getElementById('to-register').onclick = () => switchScreen('login-screen', 'register-screen');
-  document.getElementById('to-login').onclick = () => switchScreen('register-screen', 'login-screen');
+  const partyScreen = document.getElementById('party-screen');
+  const backMainBtnParty = document.getElementById('back-main-btn-party');
+  const partyCodeInput = document.getElementById('party-code-input');
+  const joinPartyCodeInput = document.getElementById('join-party-code');
+  const joinPartyBtn = document.getElementById('join-party-btn');
+  const partyInfo = document.getElementById('party-info');
+  const turnIndicator = document.getElementById('turn-indicator');
+  const partyMoveBtn = document.getElementById('party-move-btn');
+  const partyGameBoard = document.getElementById('party-game-board');
+  const partyMessage = document.getElementById('party-message');
 
-  // Auth buttons
-  document.getElementById('register-btn').onclick = register;
-  document.getElementById('login-btn').onclick = login;
+  const winnerScreen = document.getElementById('winner-screen');
+  const winnerText = document.getElementById('winner-text');
+  const winnerBackBtn = document.getElementById('winner-back-btn');
 
-  // Game mode buttons
-  document.getElementById('start-duel-btn').onclick = () => {
-    showElement('duel-settings');
-    clearGameBoard();
-    setGameMessage('');
+  // Sounds
+  const sounds = {
+    bgMusic: new Audio('https://cdn.pixabay.com/download/audio/2021/10/22/audio_6b418bb504.mp3?filename=happy-upbeat-instrumental-12755.mp3'),
+    flip: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_d9826e30f3.mp3?filename=wood-plank-flick-6062.mp3'),
+    match: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_77f74712d8.mp3?filename=cartoon-clang-wobble-6072.mp3'),
+    fail: new Audio('https://cdn.pixabay.com/download/audio/2021/08/04/audio_1022c8925e.mp3?filename=boing-6061.mp3'),
   };
-  document.getElementById('duel-start-game-btn').onclick = startDuel;
+  sounds.bgMusic.loop = true;
+  sounds.bgMusic.volume = 0.15;
 
-  document.getElementById('start-party-btn').onclick = startPartyMode;
+  // Game variables
+  let currentUser = null;
+  let darkMode = false;
 
-  document.getElementById('toggle-darkmode-btn').onclick = toggleDarkMode;
+  // Duel mode variables
+  const emojiSets = {
+    easy: ["🍎", "🍌", "🍇", "🍉"],
+    medium: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒"],
+    hard: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍"],
+    extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"],
+    impossible: ["🍎","🍌","🍇","🍉","🥝","🍒","🍓","🍍","🥥","🥑","🥭","🍋"]
+  };
+  const revealTimes = {
+    easy: 1200,
+    medium: 1400,
+    hard: 1600,
+    extreme: 1800,
+    impossible: 2000
+  };
+  let firstCard = null;
+  let secondCard = null;
+  let lockBoard = false;
+  let matchedPairs = 0;
+  let totalPairs = 0;
 
-  document.getElementById('back-to-menu-btn').onclick = () => {
-    backToMainMenu();
+  // Party mode variables (not fully implemented here for brevity)
+
+  // Owner reserved
+  const ownerUser = 'Owner';
+  const ownerPass = 'ownerpass';
+
+  // --- FUNCTIONS ---
+
+  function showMainMenu() {
+    hideAll();
+    mainMenu.style.display = 'flex';
+    sounds.bgMusic.play().catch(() => {});
+  }
+  function hideAll() {
+    [mainMenu, gameScreen, partyScreen, winnerScreen].forEach(el => el.style.display = 'none');
+  }
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = (input.type === 'password') ? 'text' : 'password';
+  }
+
+  // Switch login/register screens
+  toRegister.onclick = () => {
+    loginScreen.style.display = 'none';
+    registerScreen.style.display = 'block';
+  };
+  toLogin.onclick = () => {
+    registerScreen.style.display = 'none';
+    loginScreen.style.display = 'block';
   };
 
-  document.getElementById('winner-back-btn').onclick = () => {
-    backToMainMenu();
+  // Register logic
+  registerBtn.onclick = () => {
+    const u = document.getElementById('register-username').value.trim();
+    const p = document.getElementById('register-password').value.trim();
+    if (!u || !p) return alert('Please enter username and password.');
+    if (u === ownerUser) return alert('Username "Owner" is reserved.');
+    if (localStorage.getItem('user_' + u) !== null) return alert('Username already taken.');
+    localStorage.setItem('user_' + u, p);
+    alert('Registered successfully! Please login.');
+    toLogin.onclick();
   };
 
-  // Music toggle
-  document.getElementById('toggle-music-btn').onclick = toggleMusic;
-};
+  // Login logic
+  loginBtn.onclick = () => {
+    const u = document.getElementById('login-username').value.trim();
+    const p = document.getElementById('login-password').value.trim();
+    if (!u || !p) return alert('Please enter username and password.');
 
-function toggleMusic() {
-  if (musicPlaying) {
-    bgMusic.pause();
-    musicPlaying = false;
-    document.getElementById('toggle-music-btn').textContent = 'Music OFF';
-  } else {
-    bgMusic.play();
-    musicPlaying = true;
-    document.getElementById('toggle-music-btn').textContent = 'Music ON';
-  }
-}
-
-function togglePassword(id) {
-  const input = document.getElementById(id);
-  input.type = (input.type === 'password') ? 'text' : 'password';
-}
-
-function switchScreen(hideId, showId) {
-  document.getElementById(hideId).style.display = 'none';
-  document.getElementById(showId).style.display = 'block';
-}
-
-function register() {
-  const user = document.getElementById('register-username').value.trim();
-  const pass = document.getElementById('register-password').value.trim();
-  if (!user || !pass) {
-    alert("Please enter username and password.");
-    return;
-  }
-  if (user.toLowerCase() === 'owner') {
-    alert("Username 'Owner' is reserved.");
-    return;
-  }
-  if (localStorage.getItem('user_' + user) !== null) {
-    alert("Username already taken.");
-    return;
-  }
-  localStorage.setItem('user_' + user, pass);
-  alert("Registered successfully! Please login.");
-  switchScreen('register-screen', 'login-screen');
-}
-
-function login() {
-  const user = document.getElementById('login-username').value.trim();
-  const pass = document.getElementById('login-password').value.trim();
-  if (!user || !pass) {
-    alert("Please enter username and password.");
-    return;
-  }
-  if ((user.toLowerCase() === 'owner' && pass === 'ownerpass') || localStorage.getItem('user_' + user) === pass) {
-    currentUser = user;
-    document.getElementById('user-display').textContent = currentUser;
-    showElement('game-screen');
-    hideElement('main-menu');
-    hideElement('duel-settings');
-    clearGameBoard();
-    setGameMessage('Choose a mode and start playing!');
-  } else {
-    alert("Wrong username or password.");
-  }
-}
-
-function showElement(id) {
-  document.getElementById(id).style.display = 'block';
-}
-function hideElement(id) {
-  document.getElementById(id).style.display = 'none';
-}
-
-function clearGameBoard() {
-  const board = document.getElementById('game-board');
-  board.innerHTML = '';
-}
-
-function setGameMessage(msg) {
-  document.getElementById('game-message').textContent = msg;
-}
-
-function backToMainMenu() {
-  currentUser = null;
-  partyPlayers = [];
-  currentTurn = 0;
-  playerErrors = [0, 0];
-  firstCard = null;
-  secondCard = null;
-  lockBoard = false;
-  matchedPairs = 0;
-  totalPairs = 0;
-  clearTimeout(duelTimer);
-  clearTimeout(partyTimer);
-
-  hideElement('game-screen');
-  hideElement('duel-settings');
-  hideElement('winner-screen');
-  showElement('main-menu');
-  clearGameBoard();
-  setGameMessage('');
-  if (musicPlaying) {
-    bgMusic.pause();
-    musicPlaying = false;
-    document.getElementById('toggle-music-btn').textContent = 'Music OFF';
-  }
-}
-
-function startDuel() {
-  clearGameBoard();
-  const level = document.getElementById('duel-level').value;
-  const emojis = emojiSets[level];
-  totalPairs = emojis.length;
-  duelCards = [...emojis, ...emojis];
-  shuffleArray(duelCards);
-
-  const board = document.getElementById('game-board');
-  board.style.gridTemplateColumns = `repeat(${Math.min(totalPairs, 6)}, 1fr)`;
-
-  duelCards.forEach(emoji => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.value = emoji;
-    card.textContent = '';
-    card.onclick = () => revealCard(card);
-    board.appendChild(card);
-  });
-
-  // Show all cards briefly, then hide
-  duelCards.forEach((_, i) => {
-    const card = board.children[i];
-    card.textContent = card.dataset.value;
-    card.classList.add('flip');
-  });
-  lockBoard = true;
-  setGameMessage('Memorize the cards!');
-
-  duelTimer = setTimeout(() => {
-    duelCards.forEach((_, i) => {
-      const card = board.children[i];
-      card.textContent = '';
-      card.classList.remove('flip');
-    });
-    lockBoard = false;
-    setGameMessage('Match the pairs!');
-  }, 1200);
-}
-
-function revealCard(card) {
-  if (lockBoard) return;
-  if (card === firstCard) return;
-
-  card.textContent = card.dataset.value;
-  card.classList.add('flip');
-  flipSound.play();
-
-  if (!firstCard) {
-    firstCard = card;
-    return;
-  }
-  secondCard = card;
-  lockBoard = true;
-
-  if (firstCard.dataset.value === secondCard.dataset.value) {
-    matchedPairs++;
-    matchSound.play();
-    resetTurn();
-    if (matchedPairs === totalPairs) {
-      setGameMessage("🎉 You won the duel! 🎉");
+    if ((u === ownerUser && p === ownerPass) || localStorage.getItem('user_' + u) === p) {
+      currentUser = u;
+      userDisplay.textContent = currentUser;
+      showGameScreen();
+      alert(`Welcome, ${currentUser}! Login successful.`);
+    } else {
+      alert('Wrong username or password.');
     }
-  } else {
-    failSound.play();
+  };
+
+  logoutBtn.onclick = () => {
+    currentUser = null;
+    hideAll();
+    showMainMenu();
+  };
+
+  toggleDarkBtn.onclick = () => {
+    darkMode = !darkMode;
+    document.body.classList.toggle('dark-mode', darkMode);
+  };
+
+  backMainBtnGame.onclick = () => {
+    if(confirm("Quit current game and go back to menu?")) {
+      hideAll();
+      showMainMenu();
+    }
+  };
+
+  loginEye.onclick = () => togglePassword('login-password');
+  registerEye.onclick = () => togglePassword('register-password');
+
+  // Duel game functions
+
+  function resetDuelBoard() {
+    firstCard = null;
+    secondCard = null;
+    lockBoard = false;
+    matchedPairs = 0;
+    gameMessage.textContent = '';
+    gameBoard.innerHTML = '';
+  }
+
+  function startDuel() {
+    resetDuelBoard();
+    const level = levelSelect.value;
+    const emojis = emojiSets[level];
+    totalPairs = emojis.length;
+    const deck = [...emojis, ...emojis];
+    deck.sort(() => Math.random() - 0.5);
+
+    gameBoard.style.gridTemplateColumns = `repeat(${Math.min(totalPairs, 6)}, 1fr)`;
+
+    deck.forEach(emoji => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.value = emoji;
+      card.textContent = '';
+      card.onclick = () => duelReveal(card);
+      gameBoard.appendChild(card);
+    });
+
+    // Show all cards face up briefly
+    gameBoard.querySelectorAll('.card').forEach(card => {
+      card.textContent = card.dataset.value;
+    });
+
     setTimeout(() => {
-      firstCard.textContent = '';
-      secondCard.textContent = '';
-      firstCard.classList.remove('flip');
-      secondCard.classList.remove('flip');
-      resetTurn();
-    }, 1000);
+      gameBoard.querySelectorAll('.card').forEach(card => {
+        card.textContent = '';
+      });
+      gameMessage.textContent = "Game started! Find pairs.";
+    }, revealTimes[level]);
   }
-}
 
-function resetTurn() {
-  [firstCard, secondCard] = [null, null];
-  lockBoard = false;
-}
+  function duelReveal(card) {
+    if (lockBoard) return;
+    if (card === firstCard) return;
 
-// Party mode
+    card.textContent = card.dataset.value;
+    sounds.flip.play().catch(() => {});
 
-function startPartyMode() {
-  partyPlayers = [currentUser];
-  currentTurn = 0;
-  playerErrors = [0];
-  clearGameBoard();
-  setGameMessage('');
-  hideElement('duel-settings');
-  showElement('game-screen');
-  setGameMessage(`${partyPlayers[currentTurn]}'s turn!`);
-  startTurnTimer();
-}
+    if (!firstCard) {
+      firstCard = card;
+      return;
+    }
+    secondCard = card;
+    lockBoard = true;
 
-function startTurnTimer() {
-  clearTimeout(partyTimer);
-  partyTimer = setTimeout(() => {
-    playerErrors[currentTurn]++;
-    setGameMessage(`${partyPlayers[currentTurn]} timed out! +1 error.`);
-    nextPartyTurn();
-  }, partyTimeoutSeconds * 1000);
-}
+    if (firstCard.dataset.value === secondCard.dataset.value) {
+      sounds.match.play().catch(() => {});
+      matchedPairs++;
+      firstCard.style.backgroundColor = '#27ae60';
+      secondCard.style.backgroundColor = '#27ae60';
 
-function nextPartyTurn() {
-  currentTurn++;
-  if (currentTurn >= partyPlayers.length) {
-    // End party game
-    let minErrors = Math.min(...playerErrors);
-    let winnerIndex = playerErrors.indexOf(minErrors);
-    setGameMessage(`${partyPlayers[winnerIndex]} wins with ${minErrors} errors!`);
-    showElement('winner-screen');
-    hideElement('game-screen');
-  } else {
-    setGameMessage(`${partyPlayers[currentTurn]}'s turn!`);
-    startTurnTimer();
+      firstCard.onclick = null;
+      secondCard.onclick = null;
+      resetSelection();
+
+      if (matchedPairs === totalPairs) {
+        gameMessage.textContent = "You won! 🎉";
+        setTimeout(() => {
+          showWinnerScreen(`${currentUser} won the duel!`);
+        }, 1500);
+      }
+    } else {
+      sounds.fail.play().catch(() => {});
+      setTimeout(() => {
+        firstCard.textContent = '';
+        secondCard.textContent = '';
+        resetSelection();
+      }, 1000);
+    }
   }
-}
-  
-function toggleDarkMode() {
-  document.body.classList.toggle('dark-mode');
-}
 
-// Utility: shuffle
-function shuffleArray(array) {
-  for(let i = array.length -1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i+1));
-    [array[i], array[j]] = [array[j], array[i]];
+  function resetSelection() {
+    [firstCard, secondCard] = [null, null];
+    lockBoard = false;
   }
-}
+
+  function showGameScreen() {
+    hideAll();
+    gameScreen.style.display = 'block';
+    resetDuelBoard();
+  }
+
+  function showWinnerScreen(text) {
+    hideAll();
+    winnerText.textContent = text;
+    winnerScreen.style.display = 'block';
+  }
+
+  winnerBackBtn.onclick = () => {
+    hideAll();
+    showMainMenu();
+  };
+
+  startDuelBtn.onclick = startDuel;
+
+});
