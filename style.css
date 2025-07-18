@@ -7,6 +7,7 @@ body {
   color: white;
   text-align: center;
   user-select: none;
+  overflow-x: hidden;
 }
 
 /* Welcome Screen */
@@ -26,6 +27,7 @@ body {
   animation: gradientMove 15s ease infinite;
   z-index: 1000;
   transition: opacity 1s ease;
+  user-select: none;
 }
 
 @keyframes gradientMove {
@@ -49,14 +51,19 @@ button {
   color: white;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.15s ease;
+  user-select: none;
 }
 button:hover {
   background: #696dff;
+  transform: scale(1.05);
+}
+button:active {
+  transform: scale(0.95);
 }
 
 /* Inputs */
-input {
+input, select {
   padding: 10px;
   margin: 10px 0;
   border-radius: 6px;
@@ -64,14 +71,7 @@ input {
   font-size: 1rem;
   width: 220px;
   max-width: 90vw;
-}
-
-select {
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: none;
-  font-size: 1rem;
+  box-sizing: border-box;
 }
 
 /* Link text */
@@ -79,8 +79,11 @@ select {
   color: #a9a9ff;
   cursor: pointer;
   margin-top: 15px;
+  user-select: none;
+  transition: color 0.3s ease;
 }
 .link-text:hover {
+  color: #d3d3ff;
   text-decoration: underline;
 }
 
@@ -89,6 +92,7 @@ select {
   cursor: pointer;
   margin-left: 8px;
   user-select: none;
+  font-size: 1.2rem;
 }
 
 /* Password container */
@@ -96,6 +100,9 @@ select {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 8px;
+  max-width: 240px;
+  margin: auto;
 }
 
 /* Game boards */
@@ -105,6 +112,9 @@ select {
   grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   gap: 12px;
   justify-content: center;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Cards */
@@ -121,17 +131,66 @@ select {
   align-items: center;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.3s ease;
-  perspective: 600px;
-  backface-visibility: hidden;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  position: relative;
 }
+
+/* Flip effect */
 .card.flip {
   transform: rotateY(180deg);
   background-color: #696dff;
 }
 
-/* Misc */
+/* Headers */
 h1, h2 {
   margin-top: 20px;
   user-select: none;
+  font-weight: 700;
+}
+
+/* Misc containers styling */
+#menu-screen, #auth-container, #duel-screen, #party-screen, #settings-screen {
+  padding: 20px;
+}
+
+/* Range inputs style */
+input[type=range] {
+  -webkit-appearance: none;
+  width: 220px;
+  max-width: 90vw;
+  height: 6px;
+  border-radius: 3px;
+  background: #696dff;
+  outline: none;
+  margin: 10px 0 20px 0;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #4e54c8;
+  cursor: pointer;
+  border: 2px solid white;
+  transition: background 0.3s ease;
+}
+input[type=range]:hover::-webkit-slider-thumb {
+  background: #8a8fff;
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .card {
+    width: 60px;
+    height: 80px;
+    font-size: 36px;
+  }
+
+  button, input, select {
+    width: 90vw;
+  }
 }
