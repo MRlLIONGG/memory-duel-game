@@ -11,6 +11,7 @@ let totalPairs = 0;
 let duelTimer = null;
 let partyTimer = null;
 let partyTimeoutSeconds = 5;
+let musicPlaying = false;
 
 const emojiSets = {
   easy: ["🍎", "🍌", "🍇", "🍉"],
@@ -19,6 +20,11 @@ const emojiSets = {
   extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"],
   impossible: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑", "🍔", "🍕"]
 };
+
+const bgMusic = document.getElementById('bg-music');
+const flipSound = document.getElementById('flip-sound');
+const matchSound = document.getElementById('match-sound');
+const failSound = document.getElementById('fail-sound');
 
 window.onload = () => {
   setTimeout(() => {
@@ -57,7 +63,22 @@ window.onload = () => {
   document.getElementById('winner-back-btn').onclick = () => {
     backToMainMenu();
   };
+
+  // Music toggle
+  document.getElementById('toggle-music-btn').onclick = toggleMusic;
 };
+
+function toggleMusic() {
+  if (musicPlaying) {
+    bgMusic.pause();
+    musicPlaying = false;
+    document.getElementById('toggle-music-btn').textContent = 'Music OFF';
+  } else {
+    bgMusic.play();
+    musicPlaying = true;
+    document.getElementById('toggle-music-btn').textContent = 'Music ON';
+  }
+}
 
 function togglePassword(id) {
   const input = document.getElementById(id);
@@ -144,6 +165,11 @@ function backToMainMenu() {
   showElement('main-menu');
   clearGameBoard();
   setGameMessage('');
+  if (musicPlaying) {
+    bgMusic.pause();
+    musicPlaying = false;
+    document.getElementById('toggle-music-btn').textContent = 'Music OFF';
+  }
 }
 
 function startDuel() {
@@ -192,6 +218,7 @@ function revealCard(card) {
 
   card.textContent = card.dataset.value;
   card.classList.add('flip');
+  flipSound.play();
 
   if (!firstCard) {
     firstCard = card;
@@ -202,11 +229,13 @@ function revealCard(card) {
 
   if (firstCard.dataset.value === secondCard.dataset.value) {
     matchedPairs++;
+    matchSound.play();
     resetTurn();
     if (matchedPairs === totalPairs) {
       setGameMessage("🎉 You won the duel! 🎉");
     }
   } else {
+    failSound.play();
     setTimeout(() => {
       firstCard.textContent = '';
       secondCard.textContent = '';
