@@ -8,20 +8,17 @@
 </head>
 <body>
 
-  <!-- Welcome intro -->
   <div id="welcome-screen">Welcome to Adam first game</div>
 
-  <!-- Main menu -->
-  <div id="main-menu" style="display:none;">
+  <div id="main-menu">
     <h1>Adam Memory Game</h1>
     <div id="auth-container">
-
       <div id="login-screen">
         <h2>Login</h2>
         <input id="login-username" placeholder="Username" autocomplete="off" />
         <div class="password-container">
           <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
-          <span id="login-eye" class="eye">👁️</span>
+          <span id="login-eye" class="eye" title="Show/Hide Password">👁️</span>
         </div>
         <button id="login-btn">Login</button>
         <p class="link-text" id="to-register">No account? Register here</p>
@@ -32,50 +29,53 @@
         <input id="register-username" placeholder="Username" autocomplete="off" />
         <div class="password-container">
           <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
-          <span id="register-eye" class="eye">👁️</span>
+          <span id="register-eye" class="eye" title="Show/Hide Password">👁️</span>
         </div>
         <button id="register-btn">Register</button>
         <p class="link-text" id="to-login">Already have an account? Login here</p>
       </div>
-
     </div>
   </div>
 
-  <!-- Game screen -->
-  <div id="game-screen" style="display:none;">
-    <h2>Welcome, <span id="user-display"></span></h2>
-
-    <div id="mode-select">
-      <button id="start-duel-btn">Start Duel Mode</button>
-      <button id="start-party-btn">Start Party Mode</button>
-      <button id="toggle-darkmode-btn">Toggle Dark Mode</button>
-    </div>
-
-    <!-- Duel settings -->
-    <div id="duel-settings" style="display:none; margin-top:15px;">
-      <label for="duel-level">Choose difficulty:</label>
-      <select id="duel-level">
+  <div id="game-screen">
+    <h2>Welcome, <span id="user-display"></span>!</h2>
+    <button id="logout-btn">Logout</button>
+    <button id="toggle-dark-btn">Toggle Dark Mode</button>
+    <button id="back-main-btn-game" style="margin-left:10px;">Back to Menu</button>
+    <div id="level-select">
+      <label for="level">Choose difficulty:</label>
+      <select id="level">
         <option value="easy">Easy (4 pairs)</option>
         <option value="medium">Medium (6 pairs)</option>
         <option value="hard">Hard (8 pairs)</option>
         <option value="extreme">Extreme (10 pairs)</option>
         <option value="impossible">Impossible (12 pairs)</option>
       </select>
-      <button id="duel-start-game-btn">Start Duel Game</button>
     </div>
-
-    <!-- Game board and messages -->
+    <button id="start-duel-btn">Start Duel</button>
     <div id="game-board"></div>
     <div id="game-message"></div>
-
-    <!-- Back button -->
-    <button id="back-to-menu-btn">Back to Main Menu</button>
   </div>
 
-  <!-- Winner screen -->
-  <div id="winner-screen" style="display:none;">
-    <h2 id="winner-text"></h2>
-    <button id="winner-back-btn">Back to Main Menu</button>
+  <div id="party-screen">
+    <h2>Party Mode</h2>
+    <button id="back-main-btn-party">Back to Menu</button>
+    <p>Send this code to your friend to join:</p>
+    <input id="party-code-input" readonly />
+    <p>Friend's code to join:</p>
+    <input id="join-party-code" placeholder="Enter code here" />
+    <button id="join-party-btn">Join Party</button>
+    <div id="party-info"></div>
+    <div id="turn-indicator"></div>
+    <button id="party-move-btn" disabled>Make Move</button>
+    <div id="party-game-board"></div>
+    <div id="party-message"></div>
+  </div>
+
+  <div id="winner-screen">
+    <h2>Game Over</h2>
+    <p id="winner-text"></p>
+    <button id="winner-back-btn">Back to Menu</button>
   </div>
 
 <script src="script.js"></script>
