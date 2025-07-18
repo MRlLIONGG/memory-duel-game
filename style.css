@@ -1,72 +1,54 @@
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: Arial, sans-serif;
   text-align: center;
-  background: linear-gradient(to bottom right, #ffe0e9, #cce5ff);
-  margin: 0;
-  padding: 0;
-  transition: background 0.5s;
+  background: white;
+  color: black;
+  transition: background 0.5s, color 0.5s;
 }
 
-#intro {
+.dark-mode {
+  background: #121212;
+  color: white;
+}
+
+#intro-screen {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#intro-text {
   font-size: 2.5em;
-  color: #fff;
-  padding: 20px;
-  background: linear-gradient(270deg, #ff4ecb, #4e9bff, #00ffc3);
-  background-size: 600% 600%;
-  animation: rainbow 5s ease infinite;
+  animation: colorfade 3s ease-in-out forwards;
 }
 
-@keyframes rainbow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.auth-box {
-  background: #fff;
-  margin: 30px auto;
-  padding: 20px;
-  width: 250px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #999;
+@keyframes colorfade {
+  0% { color: red; opacity: 0; }
+  50% { color: yellow; opacity: 0.7; }
+  100% { color: lime; opacity: 1; }
 }
 
 input {
-  margin: 10px 0;
-  padding: 10px;
-  width: 90%;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 8px;
 }
 
 button {
-  padding: 10px 15px;
-  background: #0077ff;
-  color: white;
-  border: none;
-  border-radius: 5px;
+  margin: 10px;
+  padding: 10px 20px;
+}
+
+.eye {
   cursor: pointer;
-  margin: 5px;
+  margin-left: 5px;
 }
 
-button:hover {
-  background: #005be0;
-}
-
-.hidden {
-  display: none;
-}
-
-#party-controls {
-  margin-top: 20px;
-}
-
-#turn-box {
-  margin-top: 20px;
-}
-
-#result {
-  font-size: 1.5em;
-  margin-top: 30px;
-  color: darkgreen;
+.password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
