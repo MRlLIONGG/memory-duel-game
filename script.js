@@ -1,3 +1,5 @@
+console.log("script.js loaded");
+
 let currentUser = null;
 const ownerUser = "Owner";
 const ownerPass = "ownerpass";
@@ -26,6 +28,7 @@ function switchToRegister() {
   document.getElementById("auth-screen").style.display = "none";
   document.getElementById("register-screen").style.display = "block";
 }
+
 function switchToLogin() {
   document.getElementById("auth-screen").style.display = "block";
   document.getElementById("register-screen").style.display = "none";
@@ -94,25 +97,28 @@ function startDuel() {
   const level = document.getElementById("level").value;
   const emojis = emojiSets[level];
   totalPairs = emojis.length;
+  matchedPairs = 0;
 
-  // Create deck with pairs, shuffle
+  // Create deck with pairs and shuffle
   const deck = [...emojis, ...emojis];
   deck.sort(() => Math.random() - 0.5);
 
   const board = document.getElementById("game-board");
   board.innerHTML = "";
-  board.style.gridTemplateColumns = `repeat(${Math.min(totalPairs*2/4,4)}, 1fr)`;
+  // Calculate columns based on pairs (max 5 columns)
+  const cols = Math.min(5, Math.ceil(deck.length / 4));
+  board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
   deck.forEach(emoji => {
     const card = document.createElement("div");
     card.className = "card";
     card.dataset.value = emoji;
-    card.textContent = "";
+    card.textContent = ""; // Hide value initially
     card.addEventListener("click", () => reveal(card));
     board.appendChild(card);
   });
 
-  // Reveal all cards for revealTimes[level], then hide
+  // Reveal all cards briefly with flip animation, then hide
   const cards = document.querySelectorAll(".card");
   cards.forEach(c => {
     c.textContent = c.dataset.value;
@@ -169,4 +175,13 @@ function checkWin() {
   } else {
     document.getElementById("game-message").textContent = "";
   }
+}
+
+function resetBoard() {
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+  matchedPairs = 0;
+  totalPairs = 0;
+  document.getElementById("game-message").textContent = "";
 }
