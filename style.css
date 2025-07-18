@@ -1,46 +1,108 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #74ebd5 0%, #9face6 100%);
-  color: #333;
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: white;
   text-align: center;
   margin: 0;
   padding: 0;
-}
-.title {
-  font-size: 2em;
-  margin: 20px;
-  font-weight: bold;
-}
-input, button {
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-}
-button {
-  background-color: #5a67d8;
-  color: white;
-  cursor: pointer;
-}
-#game-board {
+  height: 100vh;
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-}
-.card {
-  width: 60px;
-  height: 60px;
-  margin: 5px;
-  background: white;
-  border: 2px solid #ccc;
-  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.5s;
+  overflow-x: hidden;
+  background-attachment: fixed;
+  animation: bgAnim 20s linear infinite;
 }
+
+@keyframes bgAnim {
+  0% {background-position: 0 0;}
+  100% {background-position: 1000px 0;}
+}
+
+.title {
+  font-size: 2.5rem;
+  margin: 20px 0;
+  text-shadow: 2px 2px 8px #000;
+  user-select: none;
+}
+
+input {
+  padding: 10px;
+  margin: 5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  width: 200px;
+}
+
+button {
+  background-color: #2980b9;
+  border: none;
+  padding: 10px 25px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 10px 0;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #1c5980;
+}
+
+#game-board {
+  margin-top: 20px;
+  max-width: 600px;
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  user-select: none;
+}
+
+.card {
+  width: 80px;
+  height: 110px;
+  background-color: #2980b9;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  font-size: 50px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 600px;
+  position: relative;
+  user-select: none;
+}
+
 .card.revealed {
-  background: lightgreen;
-  transform: scale(1.2);
+  background-color: #1abc9c;
+  cursor: default;
+}
+
+.card.flip {
+  animation: flipCard 0.6s forwards;
+}
+
+@keyframes flipCard {
+  0% {transform: rotateY(0deg);}
+  100% {transform: rotateY(180deg);}
+}
+
+#game-message {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  height: 25px;
+}
+
+#admin-panel {
+  margin-top: 25px;
+}
+
+#level-select {
+  margin-bottom: 10px;
 }
