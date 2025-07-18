@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #9be1ff, #ffd0f4);
+    overflow: hidden;
+}
+
+#app {
+    text-align: center;
+    margin-top: 50px;
+}
+
+button {
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 12px;
+    background-color: #ff9de2;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff7cd1;
+}
+
+.credit {
+    margin-top: 40px;
+    font-size: 14px;
+    color: #555;
+}
+
+canvas#background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
