@@ -25,8 +25,9 @@
     100%{background-position:0% 50%;}
   }
 
+  /* Welcome screen container */
   #welcome-screen {
-    position: absolute;
+    position: fixed;
     top:0; left:0; right:0; bottom:0;
     display: flex;
     justify-content: center;
@@ -39,8 +40,8 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: rainbowText 3s linear infinite, fadeInOut 2.5s forwards;
+    z-index: 9999;
   }
-
   @keyframes rainbowText {
     0% {background-position: 0% 50%;}
     100% {background-position: 400% 50%;}
@@ -52,32 +53,45 @@
     100% {opacity: 0; visibility: hidden;}
   }
 
-  #main-menu, #game-ui {
+  /* Containers */
+  #main-menu, #game-screen, #winner-screen {
     display: none;
     flex-direction: column;
     align-items: center;
-    text-align: center;
-    max-width: 480px;
+    max-width: 400px;
+    width: 90vw;
+    margin: auto;
+    padding: 20px;
+    background: rgba(0,0,0,0.35);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
   }
-
-  #main-menu.active, #game-ui.active {
+  #main-menu.active, #game-screen.active, #winner-screen.active {
     display: flex;
   }
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  h1, h2 {
+    margin: 10px 0;
+  }
+
+  /* Forms */
+  input {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
   }
 
   button {
-    background: #ff416c;
-    border: none;
-    color: white;
-    font-size: 1.2rem;
     padding: 12px 30px;
-    margin: 10px;
-    border-radius: 10px;
+    margin: 10px 5px;
+    border-radius: 8px;
+    border: none;
+    background: #ff416c;
+    color: white;
+    font-weight: bold;
     cursor: pointer;
     box-shadow: 0 5px 15px rgba(255,65,108,0.7);
     transition: background-color 0.3s ease;
@@ -86,38 +100,44 @@
     background: #ff1e50;
   }
 
-  #auth-container {
-    background: rgba(0,0,0,0.35);
-    padding: 25px 35px;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-    width: 100%;
-  }
-  input {
-    width: 100%;
-    font-size: 1rem;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 8px;
-    border: none;
-  }
   p.link-text {
     color: #ff99a9;
     cursor: pointer;
-    margin-top: 12px;
     user-select: none;
+    margin-top: 10px;
   }
   p.link-text:hover {
     text-decoration: underline;
   }
 
-  /* Dark mode styles */
+  /* Eye icon container */
+  .password-container {
+    position: relative;
+    width: 100%;
+  }
+  .password-container input {
+    padding-right: 40px;
+  }
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.2rem;
+    color: #ff99a9;
+  }
+
+  /* Dark mode */
   body.dark-mode {
     background: #121212;
     color: #eee;
     animation: none;
   }
-  body.dark-mode #auth-container {
+  body.dark-mode #main-menu,
+  body.dark-mode #game-screen,
+  body.dark-mode #winner-screen {
     background: rgba(255,255,255,0.1);
     box-shadow: none;
   }
@@ -132,126 +152,171 @@
 </head>
 <body>
 
-  <!-- Welcome intro -->
+  <!-- Welcome Screen -->
   <div id="welcome-screen">Welcome to Adam first game</div>
 
-  <!-- Main menu with login/register -->
+  <!-- Main Menu with Login/Register -->
   <div id="main-menu" class="active">
     <h1>Adam Memory Game</h1>
-    <div id="auth-container">
 
-      <div id="login-screen">
-        <h2>Login</h2>
+    <!-- Login Screen -->
+    <div id="login-screen">
+      <h2>Login</h2>
+      <div class="password-container">
         <input id="login-username" placeholder="Username" autocomplete="off" />
+      </div>
+      <div class="password-container">
         <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
-        <button id="login-btn">Login</button>
-        <p class="link-text" id="to-register">No account? Register here</p>
+        <span class="eye-icon" id="login-eye" title="Show/hide password">&#128065;</span>
       </div>
+      <button id="login-btn">Login</button>
+      <p class="link-text" id="to-register">No account? Register here</p>
+    </div>
 
-      <div id="register-screen" style="display:none;">
-        <h2>Register</h2>
+    <!-- Register Screen -->
+    <div id="register-screen" style="display:none;">
+      <h2>Register</h2>
+      <div class="password-container">
         <input id="register-username" placeholder="Username" autocomplete="off" />
-        <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
-        <button id="register-btn">Register</button>
-        <p class="link-text" id="to-login">Already have an account? Login here</p>
       </div>
-
+      <div class="password-container">
+        <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
+        <span class="eye-icon" id="register-eye" title="Show/hide password">&#128065;</span>
+      </div>
+      <button id="register-btn">Register</button>
+      <p class="link-text" id="to-login">Already have an account? Login here</p>
     </div>
   </div>
 
-  <!-- Game UI (hidden until login success) -->
-  <div id="game-ui">
+  <!-- Game Screen -->
+  <div id="game-screen">
     <h2>Welcome, <span id="user-display"></span>!</h2>
     <div>
       <button id="toggle-darkmode">Toggle Dark Mode</button>
-      <button id="start-duel">Start Duel</button>
-      <button id="start-party">Start Party Mode</button>
+      <button id="start-duel">Start Duel (Placeholder)</button>
+      <button id="start-party">Start Party Mode (Placeholder)</button>
       <button id="logout-btn">Logout</button>
     </div>
-
     <div id="game-message" style="margin-top:20px; font-size:1.2rem;"></div>
-
-    <!-- Placeholder for game board -->
     <div id="game-board" style="margin-top:15px; max-width:400px;"></div>
   </div>
 
+  <!-- Winner Screen -->
+  <div id="winner-screen">
+    <h2>Game Over</h2>
+    <p id="winner-text" style="font-size:1.4rem; margin: 20px 0;"></p>
+    <button id="back-menu-btn">Back to Menu</button>
+  </div>
+
 <script>
-  // Wait 2.5s then hide welcome and show main menu
+  // State variables
+  let currentUser = null;
+  let partyPlayers = [];
+  let currentTurn = 0;
+  let playerErrors = [0, 0];
+
+  // Wait for welcome fade then show main menu
   window.onload = () => {
     setTimeout(() => {
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('main-menu').classList.add('active');
     }, 2500);
+
+    // Attach eye toggles
+    document.getElementById('login-eye').onclick = () => togglePassword('login-password');
+    document.getElementById('register-eye').onclick = () => togglePassword('register-password');
   };
 
-  // Switch login/register screens
-  const toRegister = document.getElementById('to-register');
-  const toLogin = document.getElementById('to-login');
-  const loginScreen = document.getElementById('login-screen');
-  const registerScreen = document.getElementById('register-screen');
+  // Toggle password visibility
+  function togglePassword(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
 
-  toRegister.onclick = () => {
-    loginScreen.style.display = 'none';
-    registerScreen.style.display = 'block';
+  // Switch between login/register forms
+  document.getElementById('to-register').onclick = () => {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('register-screen').style.display = 'block';
   };
-  toLogin.onclick = () => {
-    registerScreen.style.display = 'none';
-    loginScreen.style.display = 'block';
+  document.getElementById('to-login').onclick = () => {
+    document.getElementById('register-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
   };
 
-  // User login/register logic (using localStorage)
-  const ownerUser = 'Owner';
-  const ownerPass = 'ownerpass';
-  let currentUser = null;
-
+  // User registration
   document.getElementById('register-btn').onclick = () => {
-    let u = document.getElementById('register-username').value.trim();
-    let p = document.getElementById('register-password').value.trim();
+    const u = document.getElementById('register-username').value.trim();
+    const p = document.getElementById('register-password').value.trim();
     if (!u || !p) return alert('Please enter username and password.');
-    if (u === ownerUser) return alert('Username "Owner" is reserved.');
+    if (u.toLowerCase() === 'owner') return alert('Username "Owner" is reserved.');
     if (localStorage.getItem('user_' + u) !== null) return alert('Username already taken.');
     localStorage.setItem('user_' + u, p);
     alert('Registered successfully! Please login.');
-    toLogin.onclick();
+    document.getElementById('register-screen').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'block';
   };
 
+  // User login
   document.getElementById('login-btn').onclick = () => {
-    let u = document.getElementById('login-username').value.trim();
-    let p = document.getElementById('login-password').value.trim();
+    const u = document.getElementById('login-username').value.trim();
+    const p = document.getElementById('login-password').value.trim();
     if (!u || !p) return alert('Please enter username and password.');
-    if ((u === ownerUser && p === ownerPass) || localStorage.getItem('user_' + u) === p) {
+    if ((u === 'Owner' && p === 'ownerpass') || localStorage.getItem('user_' + u) === p) {
       currentUser = u;
-      // Hide login/register, show game UI
-      document.getElementById('main-menu').classList.remove('active');
-      document.getElementById('game-ui').classList.add('active');
-      document.getElementById('user-display').textContent = currentUser;
-      document.getElementById('game-message').textContent = 'Choose an option to start playing!';
+      alert(`Welcome, ${u}! Login successful.`);
+      showGameScreen();
     } else {
       alert('Wrong username or password.');
     }
   };
 
-  // Logout button - show main menu again
+  // Show game screen, hide menus
+  function showGameScreen() {
+    document.getElementById('main-menu').classList.remove('active');
+    document.getElementById('game-screen').classList.add('active');
+    document.getElementById('user-display').textContent = currentUser;
+    document.getElementById('game-message').textContent = 'Choose an option to start playing!';
+  }
+
+  // Logout button
   document.getElementById('logout-btn').onclick = () => {
     currentUser = null;
-    document.getElementById('game-ui').classList.remove('active');
+    document.getElementById('game-screen').classList.remove('active');
     document.getElementById('main-menu').classList.add('active');
-    // Clear inputs
+    clearInputs();
+  };
+
+  function clearInputs() {
     document.getElementById('login-username').value = '';
     document.getElementById('login-password').value = '';
-  };
+    document.getElementById('register-username').value = '';
+    document.getElementById('register-password').value = '';
+  }
 
   // Dark mode toggle
   document.getElementById('toggle-darkmode').onclick = () => {
     document.body.classList.toggle('dark-mode');
   };
 
-  // Dummy handlers for duel and party mode buttons
+  // Placeholder duel start
   document.getElementById('start-duel').onclick = () => {
-    document.getElementById('game-message').textContent = 'Duel mode started! (Game logic not implemented yet)';
+    document.getElementById('game-message').textContent = 'Duel mode started! (Game logic coming soon)';
   };
+
+  // Party mode start (demo)
   document.getElementById('start-party').onclick = () => {
-    document.getElementById('game-message').textContent = 'Party mode started! (Game logic not implemented yet)';
+    partyPlayers = [currentUser, "Player 2"];
+    currentTurn = 0;
+    playerErrors = [0, 0];
+    document.getElementById('game-message').textContent = `${partyPlayers[currentTurn]}'s turn to play!`;
+  };
+
+  // You can expand this with full game logic for turns, error counting, etc.
+
+  // Winner screen back to menu
+  document.getElementById('back-menu-btn').onclick = () => {
+    document.getElementById('winner-screen').classList.remove('active');
+    document.getElementById('main-menu').classList.add('active');
   };
 </script>
 
