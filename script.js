@@ -1,8 +1,9 @@
 let currentUser = null;
-let partyPlayers = [];
+let partyPlayersData = [];
 let currentTurn = 0;
 let playerErrors = [];
 let partyCode = null;
+
 let duelCards = [];
 let duelFirstCard = null;
 let duelSecondCard = null;
@@ -145,13 +146,17 @@ function hideAllScreens() {
   });
 }
 
+function showAuthScreen() {
+  document.getElementById('auth-container').style.display = 'block';
+  switchAuthScreens('login');
+}
+
 // Duel mode logic
 function startDuel() {
   const diff = document.getElementById('duel-difficulty').value;
   const emojis = emojiSets[diff];
   if(!emojis) return alert("Invalid difficulty");
 
-  // Reset duel variables
   duelCards = shuffle([...emojis, ...emojis]);
   duelFirstCard = null;
   duelSecondCard = null;
@@ -168,7 +173,7 @@ function startDuel() {
     card.className = 'card';
     card.dataset.emoji = emoji;
     card.dataset.index = index;
-    card.textContent = ''; // Hidden initially
+    card.textContent = '';
     card.onclick = () => flipCard(card);
     board.appendChild(card);
   });
@@ -223,9 +228,10 @@ function flipCard(card) {
 }
 
 // Party mode logic
-
-let partyPlayersData = [];
 let partyTurnTimer = null;
+let partyFirstCard = null;
+let partySecondCard = null;
+let partyLockBoard = false;
 
 function createParty() {
   partyPlayersData = [{name: currentUser, errors: 0}];
@@ -266,7 +272,6 @@ function startPartyGame() {
 }
 
 function renderPartyCards() {
-  // Simple 6 pairs emoji set
   const emojis = emojiSets.medium;
   let cards = shuffle([...emojis, ...emojis]);
   const board = document.getElementById('party-game-board');
@@ -285,10 +290,6 @@ function renderPartyCards() {
   partySecondCard = null;
   partyLockBoard = false;
 }
-
-let partyFirstCard = null;
-let partySecondCard = null;
-let partyLockBoard = false;
 
 function partyFlipCard(card) {
   if(partyLockBoard) return;
@@ -351,7 +352,7 @@ function nextTurn() {
 function generatePartyCode() {
   return Math.random().toString(36).substring(2, 7).toUpperCase();
 }
- 
+
 // Fisher-Yates shuffle
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
@@ -364,10 +365,4 @@ function shuffle(array) {
       array[randomIndex], array[currentIndex]];
   }
   return array;
-}
-
-function showAuthScreen() {
-  hideAllScreens();
-  document.getElementById('auth-container').style.display = 'block';
-  switchAuthScreens('login');
 }
