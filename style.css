@@ -1,88 +1,193 @@
+/* Base body styles */
 body {
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-  margin: 0;
-  padding: 0;
-  text-align: center;
-  transition: background 0.5s;
-}
-
-h1, h2 {
+  margin: 0; padding: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+  background: linear-gradient(270deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
+  background-size: 800% 800%;
+  animation: gradientBG 20s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: #333;
-  margin-top: 20px;
+  transition: background 0.5s, color 0.5s;
+}
+@keyframes gradientBG {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 
+/* Welcome intro screen */
+#welcome-screen {
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 3.5rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+  background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowText 3s linear infinite, fadeInOut 2.5s forwards;
+  z-index: 10;
+}
+@keyframes rainbowText {
+  0% {background-position: 0% 50%;}
+  100% {background-position: 400% 50%;}
+}
+@keyframes fadeInOut {
+  0% {opacity: 0;}
+  10% {opacity: 1;}
+  90% {opacity: 1;}
+  100% {opacity: 0; visibility: hidden;}
+}
+
+/* Main menu container */
+#main-menu {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 15px;
+  padding: 30px 25px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+#main-menu h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #333;
+  user-select: none;
+}
+
+/* Login/Register container */
+#auth-container {
+  width: 100%;
+}
+input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: 2px solid #90caf9;
+  box-sizing: border-box;
+}
 button {
-  padding: 10px 20px;
-  margin: 10px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
   background: #64b5f6;
   border: none;
   border-radius: 8px;
   color: white;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: background-color 0.3s;
+  user-select: none;
 }
-
 button:hover {
-  transform: scale(1.05);
   background: #42a5f5;
 }
 
-input {
-  padding: 10px;
-  margin: 5px;
-  border: 2px solid #90caf9;
-  border-radius: 5px;
-}
-
-.eye {
-  cursor: pointer;
-  margin-left: 10px;
-}
-
+/* Toggle password eye icon */
 .password-container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  margin-bottom: 10px;
+}
+.password-container input {
+  flex-grow: 1;
+  margin-right: 8px;
+}
+.eye {
+  cursor: pointer;
+  user-select: none;
+  font-size: 1.2rem;
+  color: #555;
+  user-select: none;
+}
+.eye:hover {
+  color: #000;
 }
 
-.dark-mode {
-  background: #212121;
-  color: white;
+/* Link text */
+p.link-text {
+  color: #1976d2;
+  cursor: pointer;
+  margin-top: 12px;
+  user-select: none;
+  font-weight: 600;
+}
+p.link-text:hover {
+  text-decoration: underline;
 }
 
-.dark-mode button {
-  background: #424242;
+/* Game screen */
+#game-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  width: 90vw;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 }
 
-#intro-screen {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: black;
+#game-message {
+  margin: 15px 0;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+/* Winner screen */
+#winner-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  padding: 20px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+#winner-text {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  user-select: none;
+}
+
+/* Mode buttons container */
+#mode-buttons {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  animation: fadeOut 2.5s ease forwards;
-  /* fadeOut starts immediately and ends at 2.5s */
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
-#intro-text {
-  font-size: 2.5em;
+/* Background modes */
+body.dark-mode {
+  background: linear-gradient(135deg, #121212, #1e1e1e);
   color: white;
-  opacity: 1;
-  animation: fadeText 2.5s ease forwards;
+  animation: none;
 }
-
-@keyframes fadeText {
-  0% { opacity: 1; }
-  80% { opacity: 1; }
-  100% { opacity: 0; }
+body.duel-mode {
+  background: linear-gradient(135deg, #283e51, #485563);
+  color: white;
+  animation: none;
 }
-
-@keyframes fadeOut {
-  0% { opacity: 1; visibility: visible; }
-  90% { opacity: 1; visibility: visible; }
-  100% { opacity: 0; visibility: hidden; }
+body.party-mode {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  color: #333;
+  animation: none;
 }
