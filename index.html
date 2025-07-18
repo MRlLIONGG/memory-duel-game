@@ -1,50 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Adam Memory Game</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Adam's First Game</title>
+  <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
 <body>
-  <!-- WELCOME INTRO -->
-  <div id="intro">
-    <h1><span>Welcome</span> to <span>Adam</span>'s First <span>Game</span>!</h1>
-  </div>
+  <div id="intro">Welcome to <span>Adam's First Game</span></div>
 
-  <!-- AUTH SCREENS -->
   <div id="auth-screen">
-    <h2>Login</h2>
-    <input type="text" id="login-username" placeholder="Username" />
-    <div class="password-container">
-      <input type="password" id="login-password" placeholder="Password" />
-      <span class="toggle-password" data-target="login-password">👁️</span>
+    <div class="auth-box">
+      <h2>Login</h2>
+      <input id="login-username" type="text" placeholder="Username">
+      <input id="login-password" type="password" placeholder="Password">
+      <button onclick="login()">Login</button>
+      <p>No account? <a href="#" onclick="switchToRegister()">Register</a></p>
     </div>
-    <label><input type="checkbox" id="remember-me" /> Remember me</label>
-    <button onclick="login()">Login</button>
-    <p onclick="switchToRegister()">No account? Register</p>
+
+    <div class="auth-box hidden">
+      <h2>Register</h2>
+      <input id="register-username" type="text" placeholder="Username">
+      <input id="register-password" type="password" placeholder="Password">
+      <button onclick="register()">Register</button>
+      <p>Have account? <a href="#" onclick="switchToLogin()">Login</a></p>
+    </div>
   </div>
 
-  <div id="register-screen" style="display:none;">
-    <h2>Register</h2>
-    <input type="text" id="register-username" placeholder="Username" />
-    <div class="password-container">
-      <input type="password" id="register-password" placeholder="Password" />
-      <span class="toggle-password" data-target="register-password">👁️</span>
+  <div id="game-screen" class="hidden">
+    <h2 id="welcome-msg">Welcome, <span id="player-name"></span>!</h2>
+    <div id="party-controls">
+      <button onclick="addPlayerToParty()">Add Player</button>
+      <input id="player-name-input" type="text" placeholder="New Player Name">
+      <button onclick="startParty()">Start Party</button>
     </div>
-    <button onclick="register()">Register</button>
-    <p onclick="switchToLogin()">Already have an account? Login</p>
-  </div>
 
-  <!-- DARK MODE TOGGLE -->
-  <button id="dark-mode-toggle">🌙 Dark Mode</button>
+    <div id="turn-box" class="hidden">
+      <h3>Current Turn: <span id="current-player"></span></h3>
+      <button onclick="simulateRound()">Play Turn</button>
+    </div>
 
-  <!-- GAME SCREEN PLACEHOLDER -->
-  <div id="game-screen" style="display:none;">
-    <h2>Welcome, <span id="player-name"></span>!</h2>
+    <div id="result" class="hidden"></div>
+
     <button onclick="deleteUser()">Logout</button>
-    <button onclick="startDuel()">Start Duel</button>
   </div>
 </body>
 </html>
