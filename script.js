@@ -1,218 +1,180 @@
-// Game & UI variables
-let currentUser = null;
+let mode = '';
+let currentPlayer = 0;
+let players = [];
+let gameStarted = false;
+let flipped = [];
+let matched = [];
+let partyCode = '';
+let errors = {};
+let timer;
 
-// Party mode vars
-const parties = {}; // store parties by code
-let currentParty = null; // current party code for player
-let playerErrors = {};
-let currentTurnIndex = 0;
-let turnTimer = null;
-
-// Duel mode vars
-let duelFirstCard = null;
-let duelSecondCard = null;
-let duelLockBoard = false;
-let duelMatchedPairs = 0;
-let duelTotalPairs = 0;
-
-const emojiSets = {
-  easy: ["🍎", "🍌", "🍇", "🍉"],               // 4 pairs
-  medium: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒"],  // 6 pairs
-  hard: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍"], // 8 pairs
-  extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"], // 10 pairs
-  impossible: ["🍎","🍌","🍇","🍉","🥝","🍒","🍓","🍍","🥥","🥑","🥭","🍋"] // 12 pairs
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById("welcome").style.display = "none";
+    document.getElementById("main-menu").classList.remove("hidden");
+  }, 2000);
 };
 
-const revealTimes = {
-  easy: 1200,
-  medium: 1500,
-  hard: 1800,
-  extreme: 2000,
-  impossible: 2200
-};
-
-const ownerUser = "Owner";
-const ownerPass = "ownerpass";
-
-// --- UTILS ---
-function generatePartyCode() {
-  return Math.random().toString(36).substr(2, 5).toUpperCase();
-}
-
-function shuffleArray(arr) {
-  for(let i = arr.length - 1; i > 0; i--) {
-    let j = Math.floor(Math.random() * (i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+function playSound(id) {
+  const audio = document.getElementById(id);
+  if (audio) {
+    audio.currentTime = 0;
+    audio.play();
   }
 }
 
-// --- DOM helpers ---
-function show(element) {
-  element.classList.remove('hidden');
-}
-function hide(element) {
-  element.classList.add('hidden');
-}
-function hideAllScreens() {
-  const screens = [
-    'welcome-screen', 'main-menu', 'login-screen', 'register-screen',
-    'game-menu', 'duel-screen', 'party-create-screen', 'party-join-screen',
-    'party-game-screen', 'winner-screen'
-  ];
-  screens.forEach(id => {
-    let el = document.getElementById(id);
-    if(el) hide(el);
-  });
+function togglePassword() {
+  const pass = document.getElementById("password");
+  pass.type = pass.type === "password" ? "text" : "password";
 }
 
-// --- PASSWORD TOGGLE ---
-function setupPasswordToggle() {
-  const loginEye = document.getElementById('login-eye');
-  const registerEye = document.getElementById('register-eye');
-  loginEye.onclick = () => togglePassword('login-password', loginEye);
-  registerEye.onclick = () => togglePassword('register-password', registerEye);
+function showLogin() {
+  mode = 'login';
+  document.getElementById("auth-title").innerText = "Login";
+  document.getElementById("main-menu").classList.add("hidden");
+  document.getElementById("auth-container").classList.remove("hidden");
 }
-function togglePassword(inputId, eyeEl) {
-  const input = document.getElementById(inputId);
-  if(input.type === 'password') {
-    input.type = 'text';
-    eyeEl.textContent = '🙈';
+
+function showRegister() {
+  mode = 'register';
+  document.getElementById("auth-title").innerText = "Register";
+  document.getElementById("main-menu").classList.add("hidden");
+  document.getElementById("auth-container").classList.remove("hidden");
+}
+
+function submitAuth() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+  if (user && pass) {
+    alert(`Welcome, ${user}! ${mode} successful.`);
+    backToMenu();
+  }
+}
+
+function backToMenu() {
+  document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
+  document.getElementById("main-menu").classList.remove("hidden");
+  clearInterval(timer);
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+}
+
+function startDuel() {
+  document.getElementById("main-menu").classList.add("hidden");
+  document.getElementById("difficulty-select").classList.remove("hidden");
+}
+
+function beginGame(difficulty) {
+  const sizes = { easy: 4, medium: 6, hard: 8, extreme: 10, impossible: 12 };
+  const size = sizes[difficulty] || 4;
+  const emojis = ["🍎", "🐶", "🚗", "🎵", "⚽", "🍕", "🐱", "🌟", "🚀", "🌈", "🧊", "👻"].slice(0, size);
+  const cards = shuffle([...emojis, ...emojis]);
+  const container = document.getElementById("game-container");
+  container.innerHTML = '';
+  flipped = [];
+  matched = [];
+  gameStarted = true;
+  document.getElementById("difficulty-select").classList.add("hidden");
+  container.classList.remove("hidden");
+  setTimeout(() => {
+    cards.forEach((emoji, i) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.dataset.index = i;
+      div.dataset.emoji = emoji;
+      div.innerText = emoji;
+      container.appendChild(div);
+    });
+    setTimeout(() => {
+      document.querySelectorAll(".card").forEach(card => card.innerText = '');
+      container.addEventListener("click", handleCardClick);
+    }, 1200);
+  }, 100);
+}
+
+function handleCardClick(e) {
+  const el = e.target;
+  if (!el.classList.contains("card") || flipped.length >= 2 || el.classList.contains("flipped")) return;
+  const index = el.dataset.index;
+  const emoji = el.dataset.emoji;
+  el.innerText = emoji;
+  el.classList.add("flipped");
+  flipped.push({ el, emoji });
+
+  playSound('flip-sound');
+
+  if (flipped.length === 2) {
+    setTimeout(() => {
+      const [a, b] = flipped;
+      if (a.emoji === b.emoji) {
+        matched.push(a.el, b.el);
+        if (matched.length === document.querySelectorAll(".card").length) {
+          playSound('win-sound');
+          alert("You won!");
+          backToMenu();
+        }
+      } else {
+        a.el.innerText = '';
+        b.el.innerText = '';
+        a.el.classList.remove("flipped");
+        b.el.classList.remove("flipped");
+        if (mode === 'party') {
+          errors[players[currentPlayer]]++;
+          alert(`${players[currentPlayer]} +1 error!`);
+        }
+        nextTurn();
+      }
+      flipped = [];
+    }, 800);
+  }
+}
+
+function shuffle(arr) {
+  return arr.sort(() => Math.random() - 0.5);
+}
+
+function startParty() {
+  mode = 'party';
+  document.getElementById("main-menu").classList.add("hidden");
+  document.getElementById("party-container").classList.remove("hidden");
+}
+
+function createParty() {
+  partyCode = Math.random().toString(36).substr(2, 5).toUpperCase();
+  players = ["Player1", "Player2"];
+  currentPlayer = 0;
+  errors = { "Player1": 0, "Player2": 0 };
+  document.getElementById("party-status").innerText = `Share this code: ${partyCode}`;
+  setTimeout(() => {
+    beginGame("medium");
+    startTimer();
+  }, 1000);
+}
+
+function joinParty() {
+  const code = document.getElementById("party-code").value;
+  if (code.length === 5) {
+    alert("Joined party!");
+    beginGame("medium");
+    startTimer();
   } else {
-    input.type = 'password';
-    eyeEl.textContent = '👁️';
+    alert("Invalid code.");
   }
 }
 
-// --- AUTH ---
-function setupAuth() {
-  document.getElementById('to-register').onclick = () => {
-    hide(document.getElementById('login-screen'));
-    show(document.getElementById('register-screen'));
-  };
-  document.getElementById('to-login').onclick = () => {
-    hide(document.getElementById('register-screen'));
-    show(document.getElementById('login-screen'));
-  };
-
-  document.getElementById('register-btn').onclick = () => {
-    const u = document.getElementById('register-username').value.trim();
-    const p = document.getElementById('register-password').value.trim();
-
-    if(!u || !p) return alert("Please enter username and password.");
-    if(u === ownerUser) return alert("Username 'Owner' is reserved.");
-    if(localStorage.getItem("user_" + u) !== null) return alert("Username already taken.");
-
-    localStorage.setItem("user_" + u, p);
-    alert("Registered successfully!");
-    // Switch back to login
-    document.getElementById('register-username').value = '';
-    document.getElementById('register-password').value = '';
-    hide(document.getElementById('register-screen'));
-    show(document.getElementById('login-screen'));
-  };
-
-  document.getElementById('login-btn').onclick = () => {
-    const u = document.getElementById('login-username').value.trim();
-    const p = document.getElementById('login-password').value.trim();
-
-    if(!u || !p) return alert("Please enter username and password.");
-
-    if((u === ownerUser && p === ownerPass) || localStorage.getItem("user_" + u) === p) {
-      currentUser = u;
-      document.getElementById('user-display').textContent = currentUser;
-      alert("Welcome, " + currentUser + "! Login successful.");
-      showGameMenu();
-    } else {
-      alert("Wrong username or password.");
-    }
-  };
+function startTimer() {
+  clearInterval(timer);
+  timer = setInterval(() => {
+    alert(`${players[currentPlayer]}'s turn ended. +1 error.`);
+    errors[players[currentPlayer]]++;
+    nextTurn();
+  }, 5000);
 }
 
-// --- SHOW GAME MENU ---
-function showGameMenu() {
-  hideAllScreens();
-  show(document.getElementById('game-menu'));
+function nextTurn() {
+  clearInterval(timer);
+  currentPlayer = (currentPlayer + 1) % players.length;
+  startTimer();
 }
-
-// --- LOGOUT ---
-function setupLogout() {
-  document.getElementById('logout-btn').onclick = () => {
-    currentUser = null;
-    hideAllScreens();
-    show(document.getElementById('main-menu'));
-    // Clear input fields
-    document.getElementById('login-username').value = '';
-    document.getElementById('login-password').value = '';
-  };
-}
-
-// --- DUEL MODE ---
-function setupDuelMode() {
-  const duelBtn = document.getElementById('start-duel-btn');
-  const duelScreen = document.getElementById('duel-screen');
-  const duelBackBtns = duelScreen.querySelectorAll('.back-btn');
-  const duelStartBtn = document.getElementById('duel-start-game-btn');
-
-  duelBtn.onclick = () => {
-    hideAllScreens();
-    show(duelScreen);
-    document.getElementById('duel-message').textContent = '';
-  };
-
-  duelBackBtns.forEach(btn => btn.onclick = () => {
-    hideAllScreens();
-    show(document.getElementById('game-menu'));
-    clearDuelBoard();
-  });
-
-  duelStartBtn.onclick = () => startDuelGame();
-}
-
-function clearDuelBoard() {
-  const board = document.getElementById('duel-game-board');
-  board.innerHTML = '';
-  duelFirstCard = null;
-  duelSecondCard = null;
-  duelLockBoard = false;
-  duelMatchedPairs = 0;
-  duelTotalPairs = 0;
-  document.getElementById('duel-message').textContent = '';
-}
-
-function startDuelGame() {
-  clearDuelBoard();
-
-  const level = document.getElementById('duel-difficulty').value;
-  const emojis = emojiSets[level];
-  duelTotalPairs = emojis.length;
-
-  const deck = [...emojis, ...emojis];
-  shuffleArray(deck);
-
-  const board = document.getElementById('duel-game-board');
-  board.style.gridTemplateColumns = `repeat(${Math.min(6, duelTotalPairs)}, 1fr)`;
-
-  // Create cards with front/back for flip effect
-  deck.forEach(emoji => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.value = emoji;
-
-    const front = document.createElement('div');
-    front.className = 'front';
-    front.textContent = '';
-
-    const back = document.createElement('div');
-    back.className = 'back';
-    back.textContent = emoji;
-
-    card.appendChild(front);
-    card.appendChild(back);
-
-    card.onclick = () => duelRevealCard(card);
-
-    board.appendChild(card);
-  });
-
-  // Show all cards briefly
-  const cards =
