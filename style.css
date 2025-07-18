@@ -1,196 +1,135 @@
 /* General styles */
+
 body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #2c3e50, #3498db);
+  color: white;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #1a1a2e;
-  color: white;
-  text-align: center;
-  user-select: none;
   overflow-x: hidden;
 }
 
-/* Welcome Screen */
-#welcome-screen {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: linear-gradient(270deg, #ff6ec4, #7873f5, #4ade80, #facc15);
-  background-size: 800% 800%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 3rem;
-  font-weight: 900;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: gradientMove 15s ease infinite;
-  z-index: 1000;
-  transition: opacity 1s ease;
-  user-select: none;
+h1, h2 {
+  text-align: center;
 }
 
-@keyframes gradientMove {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
-
-#welcome-screen.fadeout {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Buttons */
-button {
-  background: #4e54c8;
-  border: none;
-  padding: 12px 25px;
-  margin: 10px;
-  border-radius: 10px;
-  color: white;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.15s ease;
-  user-select: none;
-}
-button:hover {
-  background: #696dff;
-  transform: scale(1.05);
-}
-button:active {
-  transform: scale(0.95);
-}
-
-/* Inputs */
-input, select {
+#main-container {
+  max-width: 480px;
+  margin: 0 auto;
   padding: 10px;
-  margin: 10px 0;
+  background: rgba(0,0,0,0.6);
+  border-radius: 12px;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+input, select, button {
+  font-size: 1rem;
+  margin: 8px 0;
+  padding: 8px 12px;
   border-radius: 6px;
   border: none;
-  font-size: 1rem;
-  width: 220px;
-  max-width: 90vw;
-  box-sizing: border-box;
 }
 
-/* Link text */
-.link-text {
-  color: #a9a9ff;
+button {
+  background-color: #2980b9;
+  color: white;
   cursor: pointer;
-  margin-top: 15px;
-  user-select: none;
-  transition: color 0.3s ease;
-}
-.link-text:hover {
-  color: #d3d3ff;
-  text-decoration: underline;
+  transition: background-color 0.3s ease;
 }
 
-/* Password toggle eye */
+button:hover {
+  background-color: #1abc9c;
+}
+
+.link-text {
+  text-align: center;
+  color: #ecf0f1;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-top: 12px;
+}
+
+.password-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-container input {
+  flex: 1;
+}
+
 .eye {
   cursor: pointer;
-  margin-left: 8px;
+  margin-left: -30px;
   user-select: none;
-  font-size: 1.2rem;
 }
 
-/* Password container */
-.password-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  max-width: 240px;
-  margin: auto;
+#welcome-screen {
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 30vh;
+  animation: colorfade 4s ease infinite alternate;
+  font-weight: bold;
 }
 
-/* Game boards */
-#duel-game-board, #party-game-board {
-  margin-top: 15px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 12px;
-  justify-content: center;
-  max-width: 720px;
-  margin-left: auto;
-  margin-right: auto;
+@keyframes colorfade {
+  0% { color: #e74c3c; }
+  50% { color: #f1c40f; }
+  100% { color: #3498db; }
 }
 
-/* Cards */
+.fadeout {
+  animation: fadeoutAnim 1s forwards;
+}
+
+@keyframes fadeoutAnim {
+  to { opacity: 0; }
+}
+
 .card {
-  width: 80px;
-  height: 110px;
-  background-color: #4e54c8;
+  width: 60px;
+  height: 80px;
+  margin: 6px;
+  background-color: #34495e;
   border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  font-size: 50px;
-  color: white;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
+  font-size: 2rem;
   cursor: pointer;
   user-select: none;
-  transition: transform 0.3s ease, background-color 0.3s ease;
-  transform-style: preserve-3d;
-  perspective: 1000px;
-  position: relative;
+  transition: background-color 0.3s;
 }
 
-/* Flip effect */
 .card.flip {
-  transform: rotateY(180deg);
-  background-color: #696dff;
+  background-color: #1abc9c;
+  color: white;
 }
 
-/* Headers */
-h1, h2 {
+#duel-game-board, #party-game-board {
   margin-top: 20px;
-  user-select: none;
-  font-weight: 700;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 360px;
 }
 
-/* Misc containers styling */
-#menu-screen, #auth-container, #duel-screen, #party-screen, #settings-screen {
-  padding: 20px;
+#duel-game-message, #party-game-message, #party-info {
+  margin-top: 10px;
+  min-height: 1.4em;
+  text-align: center;
+  font-weight: bold;
 }
 
-/* Range inputs style */
-input[type=range] {
-  -webkit-appearance: none;
-  width: 220px;
-  max-width: 90vw;
-  height: 6px;
-  border-radius: 3px;
-  background: #696dff;
-  outline: none;
-  margin: 10px 0 20px 0;
-  cursor: pointer;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #4e54c8;
-  cursor: pointer;
-  border: 2px solid white;
-  transition: background 0.3s ease;
-}
-input[type=range]:hover::-webkit-slider-thumb {
-  background: #8a8fff;
+.btn-back {
+  background-color: #e67e22;
+  margin-top: 12px;
 }
 
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .card {
-    width: 60px;
-    height: 80px;
-    font-size: 36px;
-  }
-
-  button, input, select {
-    width: 90vw;
-  }
+.btn-back:hover {
+  background-color: #d35400;
 }
