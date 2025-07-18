@@ -9,9 +9,6 @@ let secondCard = null;
 let lockBoard = false;
 let matchedPairs = 0;
 let totalPairs = 0;
-let moves = 0;
-let timerInterval = null;
-let secondsElapsed = 0;
 
 // Emoji sets for different difficulties
 const emojiSets = {
@@ -29,30 +26,19 @@ const revealTimes = {
   extreme: 3000
 };
 
-const backgroundMusic = document.getElementById("background-music");
-const clickSound = document.getElementById("click-sound");
-const matchSound = document.getElementById("match-sound");
+// Audio Setup
+let bgmVolume = 0.5;
+let sfxVolume = 0.5;
 
-const musicVolumeSlider = document.getElementById("music-volume");
-const sfxVolumeSlider = document.getElementById("sfx-volume");
-
-musicVolumeSlider.addEventListener("input", () => {
-  backgroundMusic.volume = parseFloat(musicVolumeSlider.value);
+const backgroundMusic = new Audio('background-music.mp3');
+backgroundMusic.loop = true;
+backgroundMusic.volume = bgmVolume;
+backgroundMusic.play().catch(() => {
+  // Autoplay might be blocked, will start after user interaction
 });
 
-sfxVolumeSlider.addEventListener("input", () => {
-  clickSound.volume = parseFloat(sfxVolumeSlider.value);
-  matchSound.volume = parseFloat(sfxVolumeSlider.value);
-});
-
-function toggleSettings() {
-  const modal = document.getElementById("settings-modal");
-  modal.style.display = modal.style.display === "block" ? "none" : "block";
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
+const clickSound = new Audio('click-sound.mp3');
+clickSound.volume = sfxVolume;
 
 function switchToRegister() {
   document.getElementById("auth-screen").style.display = "none";
@@ -106,7 +92,7 @@ function login() {
     } else {
       document.getElementById("admin-panel").style.display = "none";
     }
-    backgroundMusic.play();
+    backgroundMusic.play().catch(() => {});
   } else {
     alert("Wrong username or password.");
   }
@@ -133,26 +119,8 @@ function resetBoard() {
   secondCard = null;
   lockBoard = false;
   matchedPairs = 0;
-  moves = 0;
-  secondsElapsed = 0;
-  clearInterval(timerInterval);
-
-  document.getElementById("move-count").textContent = moves;
-  document.getElementById("timer").textContent = "0:00";
   document.getElementById("game-message").textContent = "";
   document.getElementById("game-board").innerHTML = "";
-}
-
-// Timer start
-function startTimer() {
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    secondsElapsed++;
-    const minutes = Math.floor(secondsElapsed / 60);
-    const seconds = secondsElapsed % 60;
-    document.getElementById("timer").textContent =
-      `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
-  }, 1000);
 }
 
 // Called when a card is clicked
@@ -160,7 +128,6 @@ function reveal(card) {
   if (lockBoard) return;
   if (card === firstCard) return; // Prevent double-click same card
 
-  clickSound.currentTime = 0;
   clickSound.play();
 
   card.classList.add("flip");
@@ -172,14 +139,9 @@ function reveal(card) {
   }
   secondCard = card;
   lockBoard = true;
-  moves++;
-  document.getElementById("move-count").textContent = moves;
 
   if (firstCard.dataset.value === secondCard.dataset.value) {
     matchedPairs++;
-    matchSound.currentTime = 0;
-    matchSound.play();
-
     resetTurn();
     checkWin();
   } else {
@@ -200,12 +162,12 @@ function resetTurn() {
 
 function checkWin() {
   if (matchedPairs === totalPairs) {
-    clearInterval(timerInterval);
-    document.getElementById("game-message").textContent = `🎉 You won in ${moves} moves and ${document.getElementById("timer").textContent}! Start a new duel.`;
+    document.getElementById("game-message").textContent = "🎉 You won! Start a new duel.";
   }
 }
 
 function startDuel() {
+  clickSound.play();
   resetBoard();
   const level = document.getElementById("level").value;
   const emojis = emojiSets[level];
@@ -219,6 +181,7 @@ function startDuel() {
   board.style.gridTemplateColumns = `repeat(${Math.min(totalPairs, 6)}, 1fr)`;
 
   // Create cards
+  board.innerHTML = "";
   deck.forEach(emoji => {
     const card = document.createElement("div");
     card.className = "card";
@@ -242,9 +205,28 @@ function startDuel() {
       card.classList.remove("flip");
     });
     lockBoard = false;
-    moves = 0;
-    secondsElapsed = 0;
-    document.getElementById("move-count").textContent = moves;
-    startTimer();
   }, revealTimes[level]);
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
+
+function toggleSettings() {
+  const panel = document.getElementById('settings-panel');
+  if (panel.style.display === 'none' || panel.style.display === '') {
+    panel.style.display = 'block';
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
+function adjustBgmVolume(value) {
+  bgmVolume = parseFloat(value);
+  backgroundMusic.volume = bgmVolume;
+}
+
+function adjustSfxVolume(value) {
+  sfxVolume = parseFloat(value);
+  clickSound.volume = sfxVolume;
 }
