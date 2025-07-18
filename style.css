@@ -1,17 +1,15 @@
-/* General */
-
 body {
+  margin: 0; padding: 0;
+  height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
   background: linear-gradient(270deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
   background-size: 800% 800%;
   animation: gradientBG 20s ease infinite;
-  margin: 0;
-  height: 100vh;
-  color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-x: hidden;
+  flex-direction: column;
 }
 
 @keyframes gradientBG {
@@ -20,23 +18,22 @@ body {
   100%{background-position:0% 50%;}
 }
 
-/* Welcome screen */
-
 #welcome-screen {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top:0; left:0; right:0; bottom:0;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
   font-size: 3.5rem;
   font-weight: 700;
   text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
-  background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff, #ff416c);
+  background: linear-gradient(45deg, #ff416c, #ff4b2b, #1e90ff, #00d2ff);
   background-size: 400% 400%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: rainbowText 3s linear infinite, fadeInOut 2.5s forwards;
-  z-index: 1000;
+  z-index: 10;
 }
 
 @keyframes rainbowText {
@@ -50,46 +47,79 @@ body {
   100% {opacity: 0; visibility: hidden;}
 }
 
-/* Link text */
+h1, h2 {
+  color: #fff;
+  margin: 15px 0;
+}
 
-.link-text {
-  color: #ff99a9;
+#auth-container {
+  background: rgba(0,0,0,0.4);
+  padding: 25px 35px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  max-width: 350px;
+  margin: auto;
+}
+
+input {
+  width: 100%;
+  font-size: 1rem;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+.eye {
   cursor: pointer;
-  margin-top: 12px;
+  margin-left: 8px;
+  user-select: none;
+  font-size: 1.2rem;
+  line-height: 1;
   user-select: none;
 }
-.link-text:hover {
-  text-decoration: underline;
-}
 
-/* Buttons */
+.password-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 button {
   background: #ff416c;
   border: none;
   color: white;
   font-size: 1.1rem;
-  padding: 10px 20px;
+  padding: 12px 30px;
   margin: 10px 0;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(255,65,108,0.7);
   transition: background-color 0.3s ease;
 }
+
 button:hover {
   background: #ff1e50;
 }
 
-/* Duel cards grid */
-
-#duel-game-board {
-  max-width: 600px;
-  margin: 0 auto;
-  user-select: none;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+#mode-select button {
+  width: 150px;
+  margin: 10px 15px;
 }
 
-/* Card style */
+#duel-settings {
+  margin-top: 20px;
+  color: white;
+}
+
+#game-board {
+  margin-top: 20px;
+  max-width: 600px;
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  user-select: none;
+}
 
 .card {
   width: 80px;
@@ -103,33 +133,58 @@ button:hover {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transform-style: preserve-3d;
-  perspective: 600px;
-  position: relative;
   user-select: none;
-  transition: transform 0.6s;
-  transform-origin: center;
-  text-shadow: 1px 1px 3px #000;
+  transition: transform 0.3s ease;
 }
-
-/* Flipped state */
 
 .card.flip {
   transform: rotateY(180deg);
-  background-color: #27ae60;
+  background-color: #3498db;
 }
 
-/* Dark Mode */
-
-.dark-mode {
-  background: #121212;
+#game-message {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  height: 25px;
   color: white;
 }
 
-.dark-mode #duel-game-board .card {
-  background-color: #444;
+#back-to-menu-btn {
+  margin-top: 20px;
+  background: #444;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
+  transition: background-color 0.3s ease;
 }
 
-.dark-mode #duel-game-board .card.flip {
-  background-color: #2ecc71;
+#back-to-menu-btn:hover {
+  background: #666;
+}
+
+.dark-mode {
+  background: #212121;
+  color: white;
+}
+
+.dark-mode #auth-container {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+.dark-mode .card {
+  background-color: #555;
+  color: #eee;
+}
+
+.dark-mode button {
+  background: #555;
+}
+
+.dark-mode button:hover {
+  background: #888;
 }
