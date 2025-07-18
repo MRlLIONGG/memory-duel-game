@@ -1,103 +1,118 @@
-// Intro fade
+let currentUser = null;
+let partyPlayers = [];
+let currentTurn = 0;
+let playerErrors = [0, 0];
+
 window.onload = () => {
   setTimeout(() => {
-    document.getElementById("intro-screen").style.display = "none";
-    document.getElementById("auth-screen").style.display = "block";
+    document.getElementById('intro-screen').style.display = 'none';
+    document.getElementById('auth-screen').style.display = 'block';
+
+    // Auto-login if remembered
+    const remembered = localStorage.getItem('rememberedUser');
+    if (remembered) {
+      currentUser = remembered;
+      showMenu();
+    }
   }, 3000);
+
+  document.getElementById('login-eye').onclick = () => togglePassword('login-password');
+  document.getElementById('register-eye').onclick = () => togglePassword('register-password');
 };
 
-// Dark mode
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
-
-// Eye toggle
-document.getElementById("login-eye").onclick = () => {
-  let pw = document.getElementById("login-password");
-  pw.type = pw.type === "password" ? "text" : "password";
-};
-
-document.getElementById("register-eye").onclick = () => {
-  let pw = document.getElementById("register-password");
-  pw.type = pw.type === "password" ? "text" : "password";
-};
-
-// Auth system (fake)
-function login() {
-  let user = document.getElementById("login-username").value;
-  let pass = document.getElementById("login-password").value;
-  if (user && pass) {
-    localStorage.setItem("user", user);
-    showMenu();
-  } else alert("Enter credentials");
-}
-
-function register() {
-  let user = document.getElementById("register-username").value;
-  let pass = document.getElementById("register-password").value;
-  if (user && pass) {
-    localStorage.setItem("user", user);
-    showMenu();
-  } else alert("Enter credentials");
-}
-
-function logout() {
-  localStorage.removeItem("user");
-  location.reload();
-}
-
-function deleteAccount() {
-  localStorage.removeItem("user");
-  alert("Account deleted");
-  location.reload();
+function togglePassword(id) {
+  let input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
 }
 
 function toggleRegister() {
-  let auth = document.getElementById("auth-screen");
-  let reg = document.getElementById("register-screen");
-  auth.style.display = auth.style.display === "none" ? "block" : "none";
-  reg.style.display = reg.style.display === "none" ? "block" : "none";
+  const login = document.getElementById('auth-screen');
+  const register = document.getElementById('register-screen');
+  login.style.display = login.style.display === 'none' ? 'block' : 'none';
+  register.style.display = register.style.display === 'none' ? 'block' : 'none';
+}
+
+function register() {
+  const user = document.getElementById('register-username').value;
+  const pass = document.getElementById('register-password').value;
+  if (!user || !pass) return alert("Fill all fields.");
+  if (localStorage.getItem(`user_${user}`)) return alert("User exists.");
+  localStorage.setItem(`user_${user}`, pass);
+  alert("Registered! You can now log in.");
+  toggleRegister();
+}
+
+function login() {
+  const user = document.getElementById('login-username').value;
+  const pass = document.getElementById('login-password').value;
+  const storedPass = localStorage.getItem(`user_${user}`);
+  if (storedPass !== pass) return alert("Wrong credentials.");
+  currentUser = user;
+  if (document.getElementById('remember-login').checked) {
+    localStorage.setItem('rememberedUser', user);
+  }
+  showMenu();
 }
 
 function showMenu() {
-  document.getElementById("auth-screen").style.display = "none";
-  document.getElementById("register-screen").style.display = "none";
-  document.getElementById("main-menu").style.display = "block";
+  hideAll();
+  document.getElementById('main-menu').style.display = 'block';
 }
 
-// Party Mode logic
-let players = ["Player 1", "Player 2"];
-let turnIndex = 0;
-let errors = [0, 0];
+function hideAll() {
+  ['auth-screen', 'register-screen', 'main-menu', 'game-screen', 'winner-screen']
+    .forEach(id => document.getElementById(id).style.display = 'none');
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('rememberedUser');
+  hideAll();
+  document.getElementById('auth-screen').style.display = 'block';
+}
+
+function deleteAccount() {
+  if (!confirm("Are you sure?")) return;
+  localStorage.removeItem(`user_${currentUser}`);
+  logout();
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+}
 
 function startPartyMode() {
-  turnIndex = 0;
-  errors = [0, 0];
-  document.getElementById("main-menu").style.display = "none";
-  document.getElementById("game-screen").style.display = "block";
-  nextTurn();
+  partyPlayers = [currentUser, "Player 2"];
+  currentTurn = 0;
+  playerErrors = [0, 0];
+  hideAll();
+  document.getElementById('game-screen').style.display = 'block';
+  updateTurnText();
 }
 
-function nextTurn() {
-  document.getElementById("player-turn").innerText = players[turnIndex] + "'s Turn";
-  document.getElementById("card-grid").innerText = "[Card grid placeholder]";
+function updateTurnText() {
+  document.getElementById('player-turn').innerText = `${partyPlayers[currentTurn]}'s Turn`;
 }
 
 function endTurn() {
-  errors[turnIndex] = Math.floor(Math.random() * 5); // Simulate errors
-  turnIndex++;
-  if (turnIndex >= players.length) {
-    let minErr = Math.min(...errors);
-    let winnerIndex = errors.indexOf(minErr);
-    document.getElementById("game-screen").style.display = "none";
-    document.getElementById("winner-screen").style.display = "block";
-    document.getElementById("winner-text").innerText = `${players[winnerIndex]} wins with ${minErr} errors!`;
+  playerErrors[currentTurn] += Math.floor(Math.random() * 5); // Random errors
+  currentTurn++;
+  if (currentTurn >= partyPlayers.length) {
+    showWinner();
   } else {
-    nextTurn();
+    updateTurnText();
   }
 }
 
+function showWinner() {
+  hideAll();
+  const minErrors = Math.min(...playerErrors);
+  const winnerIndex = playerErrors.indexOf(minErrors);
+  document.getElementById('winner-text').innerText =
+    `${partyPlayers[winnerIndex]} wins with ${minErrors} errors!`;
+  document.getElementById('winner-screen').style.display = 'block';
+}
+
 function backToMenu() {
-  document.getElementById("winner-screen").style.display = "none";
-  document.getElementById("main-menu").style.display = "block";
+  showMenu();
 }
