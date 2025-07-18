@@ -1,115 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Adam Memory Game</title>
-<link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adam Memory Game</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div id="welcome" class="centered colorful-text">Welcome to Adam first game</div>
 
-  <!-- Welcome intro -->
-  <div id="welcome-screen">Welcome to Adam first game</div>
-
-  <!-- Main menu with login/register -->
   <div id="main-menu" class="hidden">
     <h1>Adam Memory Game</h1>
-    <div id="auth-container">
-
-      <div id="login-screen">
-        <h2>Login</h2>
-        <div class="password-container">
-          <input id="login-username" placeholder="Username" autocomplete="off" />
-          <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
-          <span class="eye" id="login-eye" title="Show/Hide Password">👁️</span>
-        </div>
-        <button id="login-btn">Login</button>
-        <p class="link-text" id="to-register">No account? Register here</p>
-      </div>
-
-      <div id="register-screen" class="hidden">
-        <h2>Register</h2>
-        <div class="password-container">
-          <input id="register-username" placeholder="Username" autocomplete="off" />
-          <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
-          <span class="eye" id="register-eye" title="Show/Hide Password">👁️</span>
-        </div>
-        <button id="register-btn">Register</button>
-        <p class="link-text" id="to-login">Already have an account? Login here</p>
-      </div>
-
-    </div>
+    <button onclick="showLogin()">Login</button>
+    <button onclick="showRegister()">Register</button>
+    <button onclick="startDuel()">Start Duel</button>
+    <button onclick="startParty()">Start Party</button>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
   </div>
 
-  <!-- Game menu -->
-  <div id="game-menu" class="hidden">
-    <h2>Welcome, <span id="user-display"></span></h2>
-    <button id="start-duel-btn">Start Duel</button>
-    <button id="start-party-create-btn">Create Party</button>
-    <button id="join-party-btn">Join Party</button>
-    <button id="logout-btn">Logout</button>
+  <div id="auth-container" class="hidden">
+    <h2 id="auth-title">Login</h2>
+    <input type="text" id="username" placeholder="Username" /><br />
+    <input type="password" id="password" placeholder="Password" />
+    <span onclick="togglePassword()" class="eye">👁️</span><br />
+    <button onclick="submitAuth()">Submit</button>
+    <button onclick="backToMenu()">Back</button>
   </div>
 
-  <!-- Duel mode screen -->
-  <div id="duel-screen" class="hidden">
-    <button class="back-btn">← Back</button>
-    <h2>Duel Mode</h2>
-    <label for="duel-difficulty">Choose Difficulty:</label>
-    <select id="duel-difficulty">
-      <option value="easy">Easy (4 pairs)</option>
-      <option value="medium">Medium (6 pairs)</option>
-      <option value="hard">Hard (8 pairs)</option>
-      <option value="extreme">Extreme (10 pairs)</option>
-      <option value="impossible">Impossible (12 pairs)</option>
-    </select>
-    <button id="duel-start-game-btn">Start Game</button>
-    <div id="duel-game-board" class="game-board"></div>
-    <div id="duel-message"></div>
+  <div id="difficulty-select" class="hidden">
+    <h2>Select Difficulty</h2>
+    <button onclick="beginGame('easy')">Easy</button>
+    <button onclick="beginGame('medium')">Medium</button>
+    <button onclick="beginGame('hard')">Hard</button>
+    <button onclick="beginGame('extreme')">Extreme</button>
+    <button onclick="beginGame('impossible')">Impossible</button>
+    <button onclick="backToMenu()">Back</button>
   </div>
 
-  <!-- Party create screen -->
-  <div id="party-create-screen" class="hidden">
-    <button class="back-btn">← Back</button>
-    <h2>Create Party</h2>
-    <p>Your party code is:</p>
-    <div id="party-code-display" class="party-code"></div>
-    <label for="party-difficulty">Vote difficulty:</label>
-    <select id="party-difficulty">
-      <option value="easy">Easy (4 pairs)</option>
-      <option value="medium">Medium (6 pairs)</option>
-      <option value="hard">Hard (8 pairs)</option>
-      <option value="extreme">Extreme (10 pairs)</option>
-      <option value="impossible">Impossible (12 pairs)</option>
-    </select>
-    <button id="party-start-btn">Start Party Game</button>
-    <p>Share your party code with friends to join!</p>
-    <div id="party-players-list"></div>
+  <div id="game-container" class="hidden"></div>
+
+  <div id="party-container" class="hidden">
+    <h2>Party Mode</h2>
+    <div id="party-status"></div>
+    <input id="party-code" placeholder="Enter Party Code" />
+    <button onclick="joinParty()">Join</button>
+    <button onclick="createParty()">Create</button>
+    <button onclick="backToMenu()">Back</button>
   </div>
 
-  <!-- Party join screen -->
-  <div id="party-join-screen" class="hidden">
-    <button class="back-btn">← Back</button>
-    <h2>Join Party</h2>
-    <input id="join-party-code" placeholder="Enter party code" />
-    <button id="join-party-confirm-btn">Join</button>
-    <div id="join-party-message"></div>
-  </div>
+  <audio id="click-sound" src="click.mp3"></audio>
+  <audio id="flip-sound" src="flip.mp3"></audio>
+  <audio id="win-sound" src="win.mp3"></audio>
 
-  <!-- Party game screen -->
-  <div id="party-game-screen" class="hidden">
-    <button class="back-btn">← Back</button>
-    <h2>Party Game - <span id="party-current-player"></span>'s Turn</h2>
-    <div id="party-game-board" class="game-board"></div>
-    <div id="party-message"></div>
-    <button id="party-end-turn-btn" disabled>End Turn</button>
-  </div>
-
-  <!-- Winner screen -->
-  <div id="winner-screen" class="hidden">
-    <h2 id="winner-text"></h2>
-    <button id="winner-back-btn">Back to Menu</button>
-  </div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
