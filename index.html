@@ -1,48 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Adam's First Game</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Adam Memory Game</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <div id="intro">Welcome to <span>Adam's First Game</span></div>
+  <div id="intro-screen">
+    <h1 id="intro-text">Welcome to Adam first game</h1>
+  </div>
 
   <div id="auth-screen">
-    <div class="auth-box">
-      <h2>Login</h2>
-      <input id="login-username" type="text" placeholder="Username">
-      <input id="login-password" type="password" placeholder="Password">
-      <button onclick="login()">Login</button>
-      <p>No account? <a href="#" onclick="switchToRegister()">Register</a></p>
+    <h2>Login</h2>
+    <input type="text" id="login-username" placeholder="Username"/>
+    <div class="password-container">
+      <input type="password" id="login-password" placeholder="Password"/>
+      <span id="login-eye" class="eye">👁️</span>
     </div>
-
-    <div class="auth-box hidden">
-      <h2>Register</h2>
-      <input id="register-username" type="text" placeholder="Username">
-      <input id="register-password" type="password" placeholder="Password">
-      <button onclick="register()">Register</button>
-      <p>Have account? <a href="#" onclick="switchToLogin()">Login</a></p>
-    </div>
+    <label><input type="checkbox" id="remember-login"/> Remember me</label>
+    <button onclick="login()">Login</button>
+    <p onclick="toggleRegister()">No account? Register</p>
   </div>
 
-  <div id="game-screen" class="hidden">
-    <h2 id="welcome-msg">Welcome, <span id="player-name"></span>!</h2>
-    <div id="party-controls">
-      <button onclick="addPlayerToParty()">Add Player</button>
-      <input id="player-name-input" type="text" placeholder="New Player Name">
-      <button onclick="startParty()">Start Party</button>
+  <div id="register-screen" style="display: none;">
+    <h2>Register</h2>
+    <input type="text" id="register-username" placeholder="Username"/>
+    <div class="password-container">
+      <input type="password" id="register-password" placeholder="Password"/>
+      <span id="register-eye" class="eye">👁️</span>
     </div>
-
-    <div id="turn-box" class="hidden">
-      <h3>Current Turn: <span id="current-player"></span></h3>
-      <button onclick="simulateRound()">Play Turn</button>
-    </div>
-
-    <div id="result" class="hidden"></div>
-
-    <button onclick="deleteUser()">Logout</button>
+    <button onclick="register()">Register</button>
+    <p onclick="toggleRegister()">Already have an account? Login</p>
   </div>
+
+  <div id="main-menu" style="display: none;">
+    <h1>Adam Memory Game</h1>
+    <button onclick="startPartyMode()">Start Party Mode</button>
+    <button onclick="logout()">Logout</button>
+    <button onclick="deleteAccount()">Delete Account</button>
+    <label><input type="checkbox" id="dark-toggle" onchange="toggleDarkMode()"> Dark Mode</label>
+  </div>
+
+  <div id="game-screen" style="display: none;">
+    <h2 id="player-turn"></h2>
+    <div id="card-grid">[Cards Placeholder]</div>
+    <button onclick="endTurn()">End Turn</button>
+  </div>
+
+  <div id="winner-screen" style="display: none;">
+    <h2 id="winner-text"></h2>
+    <button onclick="backToMenu()">Back to Menu</button>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
