@@ -1,6 +1,12 @@
-// script.js
+// Embedded base64 audio data for sounds
+const clickSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YRAAAA==");
+const matchSound = new Audio("data:audio/wav;base64,UklGRmQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAA==");
+const winSound = new Audio("data:audio/wav;base64,UklGRkwAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAA==");
 
-// Card symbols (8 pairs for 16 cards)
+// Simple looping beep as background music (very short placeholder)
+const bgMusic = new Audio("data:audio/wav;base64,UklGRpQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YQAAAA==");
+bgMusic.loop = true;
+
 const symbols = ['🍎','🍌','🍇','🍒','🍉','🍍','🥝','🍓'];
 
 let gameBoard = document.getElementById('game-board');
@@ -12,18 +18,12 @@ let toggleThemeBtn = document.getElementById('toggle-theme-btn');
 let toggleMusicBtn = document.getElementById('toggle-music-btn');
 let leaveGameBtn = document.getElementById('leave-game-btn');
 
-let bgMusic = document.getElementById('bg-music');
-let clickSound = document.getElementById('click-sound');
-let matchSound = document.getElementById('match-sound');
-let winSound = document.getElementById('win-sound');
-
 let turnInfo = document.getElementById('turn-info');
 let scoreInfo = document.getElementById('score-info');
 
 let darkMode = false;
 let musicOn = true;
 
-// Game state variables
 let deck = [];
 let flippedCards = [];
 let matchedCards = [];
@@ -32,7 +32,6 @@ let scores = {1: 0, 2: 0};
 let canClick = true;
 
 function shuffle(array) {
-  // Fisher-Yates shuffle
   for(let i = array.length -1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i+1));
     [array[i], array[j]] = [array[j], array[i]];
@@ -50,7 +49,7 @@ function createCard(symbol, index) {
   card.classList.add('card');
   card.dataset.symbol = symbol;
   card.dataset.index = index;
-  card.textContent = ''; // hidden initially
+  card.textContent = '';
 
   card.addEventListener('click', () => {
     if (!canClick) return;
@@ -73,7 +72,6 @@ function flipCard(card) {
 
   if (flippedCards.length === 2) {
     canClick = false;
-
     setTimeout(() => {
       checkMatch();
     }, 1000);
@@ -84,7 +82,6 @@ function checkMatch() {
   let [card1, card2] = flippedCards;
 
   if (card1.dataset.symbol === card2.dataset.symbol) {
-    // Match!
     card1.classList.add('matched');
     card2.classList.add('matched');
     matchedCards.push(card1, card2);
@@ -93,18 +90,15 @@ function checkMatch() {
 
     playMatch();
 
-    // Check win condition
     if (matchedCards.length === deck.length) {
       endGame();
       return;
     }
 
-    // Player gets another turn
     flippedCards = [];
     canClick = true;
 
   } else {
-    // No match, flip back and switch player
     setTimeout(() => {
       card1.classList.remove('flipped');
       card1.textContent = '';
@@ -132,7 +126,7 @@ function endGame() {
   let winner;
   if (scores[1] > scores[2]) winner = 1;
   else if (scores[2] > scores[1]) winner = 2;
-  else winner = 0; // tie
+  else winner = 0;
 
   if (winner === 0) {
     turnInfo.textContent = `It's a tie!`;
@@ -206,7 +200,6 @@ function leaveGame() {
   }
 }
 
-// Event Listeners
 startBtn.addEventListener('click', () => {
   welcomeScreen.classList.add('hidden');
   gameContainer.classList.remove('hidden');
