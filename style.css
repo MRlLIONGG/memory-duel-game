@@ -1,181 +1,76 @@
-body {
-  background: linear-gradient(135deg, #2c3e50, #3498db);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: white;
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  background-attachment: fixed;
-  animation: bgAnim 20s linear infinite;
-}
-
-@keyframes bgAnim {
-  0% {background-position: 0 0;}
-  100% {background-position: 1000px 0;}
-}
-
-.title {
-  font-size: 2.5rem;
-  margin: 20px 0;
-  text-shadow: 2px 2px 8px #000;
-  user-select: none;
-}
-
-input {
-  padding: 10px;
-  margin: 5px;
-  font-size: 1rem;
-  border-radius: 5px;
-  border: none;
-  width: 200px;
-}
-
-button {
-  background-color: #2980b9;
-  border: none;
-  padding: 10px 25px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  border-radius: 5px;
-  margin: 10px 5px;
-  transition: background-color 0.3s;
-}
-
-button:hover:enabled {
-  background-color: #1c5980;
-}
-
-button:disabled {
-  background-color: #555;
-  cursor: default;
-}
-
-/* Style for clickable paragraphs for switching screens */
-#auth-screen p,
-#register-screen p {
-  display: inline-block;
-  background-color: rgba(255, 255, 255, 0.15);
-  padding: 5px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.3s;
-  margin-top: 10px;
-  font-weight: 600;
-}
-
-#auth-screen p:hover,
-#register-screen p:hover {
-  background-color: rgba(255, 255, 255, 0.35);
-}
-
-#game-board {
-  margin-top: 20px;
-  max-width: 600px;
-  display: grid;
-  gap: 12px;
-  justify-content: center;
-  user-select: none;
-  outline: none;
-}
-
-.card {
-  width: 80px;
-  height: 110px;
-  background-color: #2980b9;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-  font-size: 50px;
-  color: white;
+/* Modal styling */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  perspective: 600px;
-  position: relative;
-  user-select: none;
-  transition: transform 0.3s;
+  z-index: 10;
 }
 
-.card.revealed {
-  background-color: #1abc9c;
-  cursor: default;
-}
-
-.card.flip {
-  animation: flipCard 0.6s forwards;
-}
-
-.card:focus {
-  outline: 3px solid #1abc9c;
-  outline-offset: 3px;
-}
-
-@keyframes flipCard {
-  0% {transform: rotateY(0deg);}
-  100% {transform: rotateY(180deg);}
-}
-
-#game-message {
-  margin-top: 15px;
-  font-size: 1.2rem;
-  height: 30px;
-}
-
-#admin-panel {
-  margin-top: 25px;
-}
-
-#level-select {
-  margin-bottom: 10px;
-}
-
-.game-controls {
-  margin: 10px 0;
-}
-
-#status-bar {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-#leaderboard {
-  max-width: 400px;
-  margin: 10px auto 40px;
-  padding: 0;
+.modal-content {
+  background: #2980b9;
+  padding: 20px;
+  border-radius: 12px;
+  width: 300px;
   text-align: left;
+  color: white;
+  box-shadow: 0 0 15px #1abc9c;
 }
 
-#leaderboard li {
-  background-color: rgba(255, 255, 255, 0.15);
-  margin: 3px 0;
-  padding: 5px 12px;
-  border-radius: 6px;
+#scoreboard {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 1.2rem;
   user-select: none;
 }
 
-@media (max-width: 480px) {
+#settings-button, #darkmode-toggle {
+  margin-left: 10px;
+  background-color: #27ae60;
+  border-radius: 6px;
+  padding: 8px 15px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+#settings-button:hover, #darkmode-toggle:hover {
+  background-color: #1e8449;
+}
+
+/* Dark mode */
+body.dark-mode {
+  background: linear-gradient(135deg, #121212, #333);
+  color: #eee;
+}
+
+body.dark-mode .title {
+  text-shadow: 2px 2px 10px #0f9d58;
+}
+
+body.dark-mode button {
+  background-color: #0f9d58;
+}
+
+body.dark-mode button:hover {
+  background-color: #0b7d43;
+}
+
+body.dark-mode #game-board {
+  background: #222;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
   #game-board {
     grid-template-columns: repeat(4, 1fr) !important;
   }
   .card {
     width: 60px;
     height: 90px;
-    font-size: 36px;
-  }
-  input {
-    width: 140px;
+    font-size: 38px;
   }
 }
