@@ -10,18 +10,20 @@ let lockBoard = false;
 let matchedPairs = 0;
 let totalPairs = 0;
 
+// Emoji sets for different difficulties
 const emojiSets = {
-  easy: ["🍎","🍌","🍇","🍉"],           // 4 pairs
-  medium: ["🍎","🍌","🍇","🍉","🥝","🍒"],  // 6 pairs
-  hard: ["🍎","🍌","🍇","🍉","🥝","🍒","🍓","🍍"], // 8 pairs
-  extreme: ["🍎","🍌","🍇","🍉","🥝","🍒","🍓","🍍","🥥","🥑"] // 10 pairs
+  easy: ["🍎", "🍌", "🍇", "🍉"],               // 4 pairs
+  medium: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒"],  // 6 pairs
+  hard: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍"], // 8 pairs
+  extreme: ["🍎", "🍌", "🍇", "🍉", "🥝", "🍒", "🍓", "🍍", "🥥", "🥑"] // 10 pairs
 };
 
+// Reveal time in milliseconds per difficulty
 const revealTimes = {
-  easy: 1000,
-  medium: 1500,
-  hard: 2000,
-  extreme: 2500
+  easy: 1500,
+  medium: 2000,
+  hard: 2500,
+  extreme: 3000
 };
 
 function switchToRegister() {
@@ -37,6 +39,7 @@ function switchToLogin() {
 function register() {
   const u = document.getElementById("register-username").value.trim();
   const p = document.getElementById("register-password").value.trim();
+
   if (!u || !p) {
     alert("Please enter username and password.");
     return;
@@ -45,10 +48,11 @@ function register() {
     alert("Username 'Owner' is reserved.");
     return;
   }
-  if (localStorage.getItem("user_" + u)) {
+  if (localStorage.getItem("user_" + u) !== null) {
     alert("Username already taken.");
     return;
   }
+
   localStorage.setItem("user_" + u, p);
   alert("Registered successfully!");
   switchToLogin();
@@ -57,10 +61,12 @@ function register() {
 function login() {
   const u = document.getElementById("login-username").value.trim();
   const p = document.getElementById("login-password").value.trim();
+
   if (!u || !p) {
     alert("Please enter username and password.");
     return;
   }
+
   if ((u === ownerUser && p === ownerPass) || localStorage.getItem("user_" + u) === p) {
     currentUser = u;
     document.getElementById("auth-screen").style.display = "none";
@@ -79,6 +85,7 @@ function login() {
 
 function deleteUser() {
   const u = document.getElementById("delete-user").value.trim();
+
   if (!u) {
     alert("Enter a username to delete.");
     return;
@@ -91,61 +98,28 @@ function deleteUser() {
   alert("User deleted if existed.");
 }
 
-function startDuel() {
-  resetBoard();
-
-  const level = document.getElementById("level").value;
-  const emojis = emojiSets[level];
-  totalPairs = emojis.length;
+// Reset game variables and board
+function resetBoard() {
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
   matchedPairs = 0;
-
-  // Create deck with pairs and shuffle
-  const deck = [...emojis, ...emojis];
-  deck.sort(() => Math.random() - 0.5);
-
-  const board = document.getElementById("game-board");
-  board.innerHTML = "";
-  // Calculate columns based on pairs (max 5 columns)
-  const cols = Math.min(5, Math.ceil(deck.length / 4));
-  board.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-
-  deck.forEach(emoji => {
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.value = emoji;
-    card.textContent = ""; // Hide value initially
-    card.addEventListener("click", () => reveal(card));
-    board.appendChild(card);
-  });
-
-  // Reveal all cards briefly with flip animation, then hide
-  const cards = document.querySelectorAll(".card");
-  cards.forEach(c => {
-    c.textContent = c.dataset.value;
-    c.classList.add("revealed", "flip");
-  });
-
-  lockBoard = true;
-  setTimeout(() => {
-    cards.forEach(c => {
-      c.textContent = "";
-      c.classList.remove("revealed", "flip");
-    });
-    lockBoard = false;
-  }, revealTimes[level]);
+  document.getElementById("game-message").textContent = "";
+  document.getElementById("game-board").innerHTML = "";
 }
 
+// Called when a card is clicked
 function reveal(card) {
-  if (lockBoard || card.classList.contains("revealed")) return;
+  if (lockBoard) return;
+  if (card === firstCard) return; // Prevent double-click same card
 
+  card.classList.add("flip");
   card.textContent = card.dataset.value;
-  card.classList.add("revealed", "flip");
 
   if (!firstCard) {
     firstCard = card;
     return;
   }
-
   secondCard = card;
   lockBoard = true;
 
@@ -155,10 +129,10 @@ function reveal(card) {
     checkWin();
   } else {
     setTimeout(() => {
+      firstCard.classList.remove("flip");
+      secondCard.classList.remove("flip");
       firstCard.textContent = "";
       secondCard.textContent = "";
-      firstCard.classList.remove("revealed", "flip");
-      secondCard.classList.remove("revealed", "flip");
       resetTurn();
     }, 1000);
   }
@@ -172,16 +146,45 @@ function resetTurn() {
 function checkWin() {
   if (matchedPairs === totalPairs) {
     document.getElementById("game-message").textContent = "🎉 You won! Start a new duel.";
-  } else {
-    document.getElementById("game-message").textContent = "";
   }
 }
 
-function resetBoard() {
-  firstCard = null;
-  secondCard = null;
-  lockBoard = false;
-  matchedPairs = 0;
-  totalPairs = 0;
-  document.getElementById("game-message").textContent = "";
+function startDuel() {
+  resetBoard();
+  const level = document.getElementById("level").value;
+  const emojis = emojiSets[level];
+  totalPairs = emojis.length;
+
+  // Create deck of pairs and shuffle
+  const deck = [...emojis, ...emojis];
+  deck.sort(() => Math.random() - 0.5);
+
+  const board = document.getElementById("game-board");
+  board.style.gridTemplateColumns = `repeat(${Math.min(totalPairs, 6)}, 1fr)`;
+
+  // Create cards
+  deck.forEach(emoji => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.value = emoji;
+    card.textContent = "";
+    card.onclick = () => reveal(card);
+    board.appendChild(card);
+  });
+
+  // Reveal all cards for a short time, then hide
+  const cards = document.querySelectorAll(".card");
+  cards.forEach(card => {
+    card.textContent = card.dataset.value;
+    card.classList.add("flip");
+  });
+
+  lockBoard = true;
+  setTimeout(() => {
+    cards.forEach(card => {
+      card.textContent = "";
+      card.classList.remove("flip");
+    });
+    lockBoard = false;
+  }, revealTimes[level]);
 }
