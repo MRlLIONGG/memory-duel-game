@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Memory Duel - Made by Adam</title>
+  <title>🧠 Memory Duel - Made by Adam</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -21,7 +21,6 @@
     <h2>Register</h2>
     <input id="register-username" placeholder="Username" autocomplete="off" />
     <input id="register-password" placeholder="Password" type="password" autocomplete="off" />
-    <input id="register-password-confirm" placeholder="Confirm Password" type="password" autocomplete="off" />
     <button onclick="register()">Register</button>
     <p onclick="switchToLogin()">Already have an account? Login</p>
   </div>
@@ -39,17 +38,9 @@
       </select>
     </div>
 
-    <div class="game-controls">
-      <button id="start-button" onclick="startDuel()">Start Duel</button>
-      <button id="reset-button" onclick="resetBoard()" disabled>Reset</button>
-      <button id="logout-button" onclick="logout()">Logout</button>
-    </div>
-
-    <div id="status-bar">
-      <div>Time: <span id="timer">0</span> seconds</div>
-      <div>Moves: <span id="moves">0</span></div>
-      <div>Score: <span id="score">0</span> / <span id="total-pairs">0</span></div>
-    </div>
+    <button id="start-button" onclick="startDuel()">Start Duel</button>
+    <button id="settings-button" onclick="toggleSettings()">Settings ⚙️</button>
+    <button id="darkmode-toggle" onclick="toggleDarkMode()">🌙 Dark Mode</button>
 
     <div id="admin-panel" style="display:none;">
       <h3>Owner Panel</h3>
@@ -57,12 +48,31 @@
       <button onclick="deleteUser()">Delete User</button>
     </div>
 
-    <div id="game-board" tabindex="0" aria-label="Memory Duel Game Board"></div>
-    <div id="game-message" role="alert" aria-live="assertive"></div>
+    <div id="scoreboard">
+      <div>Moves: <span id="move-count">0</span></div>
+      <div>Time: <span id="timer">0:00</span></div>
+    </div>
 
-    <h3>Leaderboard</h3>
-    <ol id="leaderboard"></ol>
+    <div id="game-board"></div>
+    <div id="game-message"></div>
   </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h3>Settings</h3>
+      <label for="music-volume">Background Music Volume</label>
+      <input type="range" id="music-volume" min="0" max="1" step="0.01" value="0.3" />
+      <label for="sfx-volume">Game Sounds Volume</label>
+      <input type="range" id="sfx-volume" min="0" max="1" step="0.01" value="0.5" />
+      <button onclick="toggleSettings()">Close</button>
+    </div>
+  </div>
+
+  <!-- Audio elements -->
+  <audio id="background-music" src="background-music.mp3" loop preload="auto"></audio>
+  <audio id="click-sound" src="click-sound.mp3" preload="auto"></audio>
+  <audio id="match-sound" src="match-sound.mp3" preload="auto"></audio>
 
   <script src="script.js"></script>
 </body>
