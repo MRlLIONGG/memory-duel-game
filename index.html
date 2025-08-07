@@ -1,109 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Adam Memory Game</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini BuildNow GG — Prototype</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Welcome Screen -->
-  <div id="welcome-screen">Welcome to Adam first game</div>
-
-  <!-- Main Container -->
-  <div id="main-container" style="display:none;">
-
-    <!-- AUTH CONTAINER -->
-    <div id="auth-container">
-      <div id="login-screen">
-        <h2>Login</h2>
-        <div class="password-container">
-          <input id="login-username" placeholder="Username" autocomplete="off" />
-        </div>
-        <div class="password-container">
-          <input id="login-password" type="password" placeholder="Password" autocomplete="off" />
-          <span id="login-eye" class="eye">👁️</span>
-        </div>
-        <button id="login-btn">Login</button>
-        <p class="link-text" id="to-register">No account? Register here</p>
-      </div>
-
-      <div id="register-screen" style="display:none;">
-        <h2>Register</h2>
-        <input id="register-username" placeholder="Username" autocomplete="off" />
-        <div class="password-container">
-          <input id="register-password" type="password" placeholder="Password" autocomplete="off" />
-          <span id="register-eye" class="eye">👁️</span>
-        </div>
-        <button id="register-btn">Register</button>
-        <p class="link-text" id="to-login">Already have an account? Login here</p>
-      </div>
-    </div>
-
-    <!-- MENU SCREEN -->
-    <div id="menu-screen" style="display:none;">
-      <h1>Adam Memory Game</h1>
-      <button id="btn-duel" class="main-btn">Duel Mode</button>
-      <button id="btn-party" class="main-btn">Party Mode</button>
-      <button id="btn-settings" class="main-btn">Settings</button>
-      <button id="btn-logout" class="main-btn logout-btn">Logout</button>
-    </div>
-
-    <!-- DUEL SCREEN -->
-    <div id="duel-screen" style="display:none;">
-      <h2>Duel Mode</h2>
-      <label for="duel-difficulty">Choose difficulty:</label>
-      <select id="duel-difficulty" class="select-input">
-        <option value="easy">Easy (4 pairs)</option>
-        <option value="medium">Medium (6 pairs)</option>
-        <option value="hard">Hard (8 pairs)</option>
-        <option value="extreme">Extreme (10 pairs)</option>
-        <option value="impossible">Impossible (12 pairs)</option>
+  <div id="ui-top">
+    <div id="mode-select">
+      Mode:
+      <select id="mode">
+        <option value="1v1">1v1 (1 bot)</option>
+        <option value="ffa">FFA (3 bots)</option>
       </select>
-      <button id="start-duel-btn" class="action-btn">Start Duel</button>
-      <button class="btn-back action-btn">Back to Menu</button>
-
-      <div id="duel-game-board"></div>
-      <div id="duel-game-message"></div>
+      <button id="start">Start</button>
     </div>
-
-    <!-- PARTY SCREEN -->
-    <div id="party-screen" style="display:none;">
-      <h2>Party Mode</h2>
-      <div class="party-controls">
-        <button id="create-party-btn" class="action-btn">Create Party</button>
-        <input id="join-party-code" placeholder="Enter Party Code" class="input-code" />
-        <button id="join-party-btn" class="action-btn">Join Party</button>
-      </div>
-
-      <div id="party-info" class="party-info"></div>
-      <div id="party-game-board"></div>
-      <div id="party-game-message"></div>
-
-      <div class="party-buttons">
-        <button id="party-end-turn" class="action-btn" style="display:none;">End Turn</button>
-        <button id="party-leave-btn" class="leave-btn" style="display:none;">Leave Party</button>
-      </div>
-
-      <button class="btn-back action-btn">Back to Menu</button>
+    <div id="scoreboard">
+      <span id="youScore">You: 0</span> · <span id="botsScore">Bots: 0</span>
     </div>
-
-    <!-- SETTINGS SCREEN -->
-    <div id="settings-screen" style="display:none;">
-      <h2>Settings</h2>
-      <label for="master-volume">Master Volume:</label>
-      <input id="master-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
-      <label for="music-volume">Music Volume:</label>
-      <input id="music-volume" type="range" min="0" max="1" step="0.01" value="0.5" />
-      <button class="btn-back action-btn">Back to Menu</button>
-    </div>
-
   </div>
 
-  <!-- Background music -->
-  <audio id="background-music" src="sounds/background.mp3" loop></audio>
+  <canvas id="game" width="1000" height="650"></canvas>
 
-  <script src="script.js"></script>
+  <div id="ui-bottom">
+    <div>WASD — Move • Mouse — Aim • Left click — Shoot • Right click — Build</div>
+    <div>Press <strong>E</strong> to toggle edit mode (place/remove blocks). R to respawn.</div>
+  </div>
+
+  <script src="skript.js"></script>
 </body>
 </html>
