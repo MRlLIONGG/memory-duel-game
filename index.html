@@ -1,33 +1,15 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mini BuildNow GG — Prototype</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falling Stars</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="ui-top">
-    <div id="mode-select">
-      Mode:
-      <select id="mode">
-        <option value="1v1">1v1 (1 bot)</option>
-        <option value="ffa">FFA (3 bots)</option>
-      </select>
-      <button id="start">Start</button>
-    </div>
-    <div id="scoreboard">
-      <span id="youScore">You: 0</span> · <span id="botsScore">Bots: 0</span>
-    </div>
-  </div>
-
-  <canvas id="game" width="1000" height="650"></canvas>
-
-  <div id="ui-bottom">
-    <div>WASD — Move • Mouse — Aim • Left click — Shoot • Right click — Build</div>
-    <div>Press <strong>E</strong> to toggle edit mode (place/remove blocks). R to respawn.</div>
-  </div>
-
-  <script src="skript.js"></script>
+    <h1>🌟 Falling Stars 🌟</h1>
+    <div id="score">Score: 0</div>
+    <canvas id="gameCanvas"></canvas>
+    <script src="script.js"></script>
 </body>
 </html>
