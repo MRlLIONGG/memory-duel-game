@@ -1,13 +1,27 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: Inter, Arial, sans-serif; }
-body { background: linear-gradient(#111, #0b1220); color: #e6eef8; display:flex; flex-direction:column; align-items:center; gap:8px; padding:12px; height:100vh; }
-#ui-top { width:1000px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; }
-#mode-select { background: rgba(255,255,255,0.03); padding:8px 12px; border-radius:8px; }
-#mode { margin-left:8px; padding:4px; }
-#start { margin-left:8px; padding:6px 8px; cursor:pointer; }
-#scoreboard { background: rgba(0,0,0,0.25); padding:6px 10px; border-radius:8px; }
-canvas { background:#79a6ff20; border:2px solid rgba(255,255,255,0.06); border-radius:6px; box-shadow: 0 8px 30px rgba(0,0,0,0.6); }
-#ui-bottom { width:1000px; display:flex; justify-content:space-between; padding:8px 10px; color:#cfe3ff; font-size:13px; opacity:0.9; }
-.healthBar { position: absolute; left: 12px; top: 68px; width: 220px; height: 16px; background: rgba(0,0,0,0.35); border-radius:8px; overflow:hidden; }
-.healthFill { height:100%; background: linear-gradient(90deg,#66ff88,#1fbf55); width:100%; transition:width 0.12s linear; }
-.btn { background:#1b6cff; color:white; border-radius:6px; padding:6px 10px; border:0; }
-small { color:#bcd; font-size:12px; }
+body {
+    margin: 0;
+    background: radial-gradient(circle at center, #0f0f0f, #000000);
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    overflow: hidden;
+}
+
+h1 {
+    color: #ffdd57;
+    text-shadow: 0 0 10px #ffdd57, 0 0 20px #ffaa00;
+    margin-top: 10px;
+}
+
+#score {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ffdd57;
+    box-shadow: 0 0 20px #ffaa00;
+}
